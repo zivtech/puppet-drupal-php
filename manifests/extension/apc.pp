@@ -1,5 +1,5 @@
 class drupal_php::extension::apc (
-  $cache_shared_memory = $drupal_php::params::cache_shared_memory,
+  $shm_size = 256M,
   $shm_segments = 1,
   $optimization = 0,
   $num_files_hint = 512,
@@ -36,7 +36,7 @@ class drupal_php::extension::apc (
     config => [
       'set ".anon/extension" "apc.so"',
       "set .anon/apc.enabled 1",
-      "set .anon/apc.shm_size ${cache_shared_memory}",
+      "set .anon/apc.shm_size ${shm_size}",
       "set .anon/apc.shm_segments ${shm_segments}",
       "set .anon/apc.optimization ${optimization}",
       "set .anon/apc.num_files_hint $num_files_hint",

@@ -5,7 +5,6 @@ class drupal_php::params (
 
   $memory_limit = '128M'
   $max_execution_time = 30
-  $cache_shared_memory = '256M'
   $max_post_size = '8M'
   $upload_max_filesize = '200M'
   $error_log_file = 'error.log'
