@@ -1,4 +1,6 @@
-class drupal_php::server::apache {
+class drupal_php::server::apache (
+    $server_port = $drupal_php::params::server_port
+  ) {
   # class { 'apache':
   #   default_mods   => false,
   #   mpm_module     => 'prefork',
@@ -44,7 +46,7 @@ class drupal_php::server::apache {
   apache::mod { 'suexec': }
   apache::mod { 'xsendfile': }
 
-  apache::listen { '8080': }
+  apache::listen { $server_port: }
 
   include php::apache
 }

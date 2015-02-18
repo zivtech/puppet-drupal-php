@@ -36,14 +36,20 @@
 # Copyright 2015 Your name here, unless otherwise noted.
 #
 class drupal_php (
-  $server = $drupal_php::params::server,
-  $opcache = 'opcache',
-  # $upload_max_filesize = '200M',
-  # $max_post_size = '8M',
-  $apacheport = '80',
-  $cached_shared_memory = $drupal_php_params::params::shared_memory,
-  $max_execution_time = $drupal_php::params::max_execution_time,
-  $memory_limit = $drupal_php::params::memory_limit
+  $server              = $drupal_php::params::server,
+  $opcache             = 'opcache',
+  $upload_max_filesize = $drupal_php::params::upload_max_filesize,
+  $timezone            = $drupal_php::params::timezone,
+  $max_post_size       = $drupal_php::params::max_post_size,
+  $max_execution_time  = $drupal_php::params::max_execution_time,
+  $memory_limit        = $drupal_php::params::memory_limit,
+  $display_errors      = $drupal_php::params::display_errors,
+  $log_errors          = $drupal_php::params::log_errors,
+  $error_log_file      = $drupal_php::params::error_log_file,
+  $error_log_directory = $drupal_php::params::error_log_directory,
+  $manage_log_file     = $drupal_php::params::manage_log_file,
+  $server_user         = $drupal_php::params::server_user,
+  $server_group        = $drupal_php::params::server_group
 ) inherits drupal_php::params {
 
   # The puppet service resource name is always httpd in puppet with puppetlabs-apache.
@@ -94,66 +100,82 @@ class drupal_php (
 
   case $opcache {
     'apc': {
-      include php::extension::apc
-
-      php::config { 'apc_shared_memory':
-        file  => "${php::params::config_root_ini}/apc.ini",
-        config => [
-          "set .anon/apc.shm_size ${cached_shared_memory}",
-        ],
-      }
-      php::config { 'apc_settings':
-        file  => "${php::params::config_root_ini}/apc.ini",
-        config => [
-          'set .anon/apc.enabled 1',
-          'set .anon/apc.shm_segments 1',
-          'set .anon/apc.optimization 0',
-          'set .anon/apc.num_files_hint 512',
-          'set .anon/apc.user_entries_hint 1024',
-          'set .anon/apc.ttl 0',
-          'set .anon/apc.user_ttl 0',
-          'set .anon/apc.gc_ttl 600',
-          'set .anon/apc.cache_by_default 1',
-          'set .anon/apc.filters "apc\.php$"',
-          'set .anon/apc.slam_defense 0',
-          'set .anon/apc.use_request_time 1',
-          'set .anon/apc.mmap_file_mask /dev/zero',
-          'set .anon/apc.file_update_protection 2',
-          'set .anon/apc.enable_cli 0',
-          'set .anon/apc.max_file_size 2M',
-          'set .anon/apc.stat 1',
-          'set .anon/apc.write_lock 1',
-          'set .anon/apc.report_autofilter 0',
-          'set .anon/apc.include_once_override 0',
-          'set .anon/apc.rfc1867 0',
-          'set .anon/apc.rfc1867_prefix "upload_"',
-          'set .anon/apc.rfc1867_name "APC_UPLOAD_PROGRESS"',
-          'set .anon/apc.rfc1867_freq 0',
-          'set .anon/apc.localcache 1',
-          'set .anon/apc.localcache.size 512',
-          'set .anon/apc.coredump_unmap 0',
-          'set .anon/apc.stat_ctime 0',
-        ],
-      }
-
+      include drupal_php::extension::apc
     }
     'opcache': {
       include php::extension::opcache
     }
   }
 
-  php::config { 'memory_limit':
+  php::config { 'php-date-timezone':
+    file  => "${php::params::config_root_ini}/general_settings.ini",
+    section  => 'PHP',
+    setting  => 'date.timezone',
+    value    => $timezone,
+  }
+
+  php::config { 'php-memory-limit':
     file  => "${php::params::config_root_ini}/general_settings.ini",
     section  => 'PHP',
     setting  => 'memory_limit',
     value    => $memory_limit,
   }
 
-  php::config { 'max_execution_time':
+  php::config { 'php-max-execution-time':
     file  => "${php::params::config_root_ini}/general_settings.ini",
     section  => 'PHP',
     setting  => 'max_execution_time',
     value    => $max_execution_time,
+  }
+
+  php::config { 'php-max-post-size':
+    file  => "${php::params::config_root_ini}/general_settings.ini",
+    section  => 'PHP',
+    setting  => 'max_post_size',
+    value    => $max_post_size,
+  }
+
+  php::config { 'php-log-errors':
+    file  => "${php::params::config_root_ini}/general_settings.ini",
+    section  => 'PHP',
+    setting  => 'log_errors',
+    value    => $log_errors,
+  }
+
+  php::config { 'php-display-errors':
+    file  => "${php::params::config_root_ini}/general_settings.ini",
+    section  => 'PHP',
+    setting  => 'display_errors',
+    value    => $display_errors,
+  }
+  
+  php::config { 'php-log-file':
+    file  => "${php::params::config_root_ini}/general_settings.ini",
+    section  => 'PHP',
+    setting  => 'log_file',
+    value    => "${error_log_directory}/${error_log_file}",
+  }
+
+  if ($manage_log_file) {
+    file { 'php-error-log-directory':
+      path   => $error_log_directory,
+      ensure => 'directory',
+      owner  => $server_user,
+      group  => $server_group,
+    }
+    file { 'php-error-log-file':
+      path   => "${error_log_directory}/${error_log_file}",
+      ensure => 'file',
+      owner  => $server_user,
+      group  => $server_group,
+    }
+  }
+  
+  # Unfotunately, old ubuntu packages use deprecated comments.
+  exec { 'clean deprecated comments in /etc/php5/conf.d':
+    command => "find ${php::params::config_root_ini}/* -type f -exec sed -i 's/#/;/g' {} \\;",
+    path => "/usr/bin:/usr/sbin:/bin",
+    onlyif => "grep -qr '#' /etc/php5/conf.d"
   }
 
 }
