@@ -2,14 +2,24 @@ class drupal_php::server::apache (
     $manage_server_listen = true,
     $server_port = $drupal_php::params::server_port,
     $mpm_module = 'prefork',
-    $server_default_vhost = true
+    $server_default_vhost = true,
+    $server_manage_service = $drupal_php::params::server_manage_service,
+    $server_service_enable = $drupal_php::params::server_service_enable,
+    $server_service_ensure = $drupal_php::params::server_service_ensure,
   ) {
-
 
   class { '::apache':
     default_mods   => [],
     mpm_module     => $mpm_module,
-    default_vhost => false,
+    default_vhost  => false,
+    service_manage => $server_manage_service,
+    service_enable => $service_enable,
+    service_ensure => $server_service_ensure,
+  }
+
+  if ($server_manage_service) {
+    # The puppet service resource name is always httpd in puppet with puppetlabs-apache.
+    Php::Extension <| |> -> Php::Config <| |> ~> Service['httpd']
   }
 
   apache::mod{ 'actions': }
@@ -24,7 +34,6 @@ class drupal_php::server::apache (
   apache::mod { 'dir': }
   apache::mod { 'env': }
   apache::mod { 'expires': }
-  apache::mod { 'fastcgi': }
   apache::mod { 'fcgid': }
   apache::mod { 'headers': }
   apache::mod { 'mime': }

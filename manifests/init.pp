@@ -1,25 +1,69 @@
+# == Class: drupal_php
+#
+# Full description of class drupal_php here.
+#
+# === Parameters
+#
+# Document parameters here.
+#
+# [*sample_parameter*]
+#   Explanation of what this parameter affects and what it defaults to.
+#   e.g. "Specify one or more upstream ntp servers as an array."
+#
+# === Variables
+#
+# Here you should define a list of variables that this module would require.
+#
+# [*sample_variable*]
+#   Explanation of how this variable affects the funtion of this class and if
+#   it has a default. e.g. "The parameter enc_ntp_servers must be set by the
+#   External Node Classifier as a comma separated list of hostnames." (Note,
+#   global variables should be avoided in favor of class parameters as
+#   of Puppet 2.6.)
+#
+# === Examples
+#
+#  class { 'drupal_php':
+#    servers => [ 'pool.ntp.org', 'ntp.local.company.com' ],
+#  }
+#
+# === Authors
+#
+# Author Name <author@domain.com>
+#
+# === Copyright
+#
+# Copyright 2015 Your name here, unless otherwise noted.
+#
 class drupal_php (
-  $server              = $drupal_php::params::server,
-  $opcache             = 'opcache',
-  $upload_max_filesize = $drupal_php::params::upload_max_filesize,
-  $timezone            = $drupal_php::params::timezone,
-  $max_post_size       = $drupal_php::params::max_post_size,
-  $max_execution_time  = $drupal_php::params::max_execution_time,
-  $memory_limit        = $drupal_php::params::memory_limit,
-  $display_errors      = $drupal_php::params::display_errors,
-  $log_errors          = $drupal_php::params::log_errors,
-  $error_log_file      = $drupal_php::params::error_log_file,
-  $error_log_directory = $drupal_php::params::error_log_directory,
-  $manage_log_file     = $drupal_php::params::manage_log_file,
-  $server_user         = $drupal_php::params::server_user,
-  $server_group        = $drupal_php::params::server_group
+  $server                     = $drupal_php::params::server,
+  $opcache                    = 'opcache',
+  $upload_max_filesize        = $drupal_php::params::upload_max_filesize,
+  $timezone                   = $drupal_php::params::timezone,
+  $max_post_size              = $drupal_php::params::max_post_size,
+  $max_execution_time         = $drupal_php::params::max_execution_time,
+  $memory_limit               = $drupal_php::params::memory_limit,
+  $display_errors             = $drupal_php::params::display_errors,
+  $log_errors                 = $drupal_php::params::log_errors,
+  $error_log_file             = $drupal_php::params::error_log_file,
+  $error_log_directory        = $drupal_php::params::error_log_directory,
+  $manage_log_file            = $drupal_php::params::manage_log_file,
+  $server_user                = $drupal_php::params::server_user,
+  $server_group               = $drupal_php::params::server_group,
+  $server_manage_service      = $drupal_php::params::server_manage_service,
+  $server_service_enable      = $drupal_php::params::server_service_enable,
+  $server_service_ensure       = $drupal_php::params::server_service_ensure
 ) inherits drupal_php::params {
 
-  # The puppet service resource name is always httpd in puppet with puppetlabs-apache.
-  Php::Extension <| |> -> Php::Config <| |> ~> Service['httpd']
 
   # Use require to install apache before any module to ensure the service can be notified.
-  require "drupal_php::server::$server"
+  class { "drupal_php::server::$server":
+    server_manage_service => $server_manage_service,
+    server_service_enable => $server_service_enable,
+    server_service_ensure => $server_service_ensure,
+  }
+
+  require wget
 
   include php
 

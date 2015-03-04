@@ -13,6 +13,9 @@ class drupal_php::params (
   $display_errors  = 'Off'
   $log_errors = 'On'
   $timezone = 'GMT'
+  $server_manage_service = true
+  $server_service_enable = true
+  $server_service_ensure = 'running'
 
 
   case $::operatingsystem {
