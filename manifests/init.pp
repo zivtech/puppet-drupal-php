@@ -40,7 +40,7 @@ class drupal_php (
   $opcache                    = 'opcache',
   $upload_max_filesize        = $drupal_php::params::upload_max_filesize,
   $timezone                   = $drupal_php::params::timezone,
-  $max_post_size              = $drupal_php::params::max_post_size,
+  $post_max_size              = $drupal_php::params::post_max_size,
   $max_execution_time         = $drupal_php::params::max_execution_time,
   $memory_limit               = $drupal_php::params::memory_limit,
   $display_errors             = $drupal_php::params::display_errors,
@@ -135,11 +135,11 @@ class drupal_php (
     value    => $max_execution_time,
   }
 
-  php::config { 'php-max-post-size':
+  php::config { 'php-post-max-size':
     file  => "${php::params::config_root_ini}/general_settings.ini",
     section  => 'PHP',
-    setting  => 'max_post_size',
-    value    => $max_post_size,
+    setting  => 'post_max_size',
+    value    => $post_max_size,
   }
 
   php::config { 'php-log-errors':

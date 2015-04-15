@@ -34,7 +34,6 @@ class drupal_php::server::apache (
   apache::mod { 'dir': }
   apache::mod { 'env': }
   apache::mod { 'expires': }
-  apache::mod { 'fcgid': }
   apache::mod { 'headers': }
   apache::mod { 'mime': }
   apache::mod { 'negotiation': }
@@ -47,7 +46,6 @@ class drupal_php::server::apache (
   apache::mod { 'suexec': }
   apache::mod { 'xsendfile': }
 
-  
   $vhost_ensure = $server_default_vhost ? {
     true  => 'present',
     false => 'absent',
