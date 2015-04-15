@@ -48,7 +48,7 @@ class drupal_php::extension::apc (
       "set .anon/apc.filters $filters",
       "set .anon/apc.slam_defense $slam_defense",
       "set .anon/apc.use_request_time $use_request_time",
-      "set .anon/apc.mmap_file_mask $mmap_file_mask/zero",
+      "set .anon/apc.mmap_file_mask $mmap_file_mask",
       "set .anon/apc.file_update_protection $file_update_protection",
       "set .anon/apc.enable_cli $enable_cli",
       "set .anon/apc.max_file_size $max_file_size",
