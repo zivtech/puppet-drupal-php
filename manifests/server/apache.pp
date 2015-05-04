@@ -7,7 +7,8 @@ class drupal_php::server::apache (
     $server_service_enable = $drupal_php::params::server_service_enable,
     $server_service_ensure = $drupal_php::params::server_service_ensure,
     $ssl = false,
-    $ssl_port = 443
+    $ssl_port = 443,
+    $purge_configs = true
   ) {
 
   class { '::apache':
@@ -17,6 +18,7 @@ class drupal_php::server::apache (
     service_manage => $server_manage_service,
     service_enable => $service_enable,
     service_ensure => $server_service_ensure,
+    purge_configs  => $purge_configs,
   }
 
   if ($server_manage_service) {
