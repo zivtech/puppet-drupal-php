@@ -142,6 +142,14 @@ class drupal_php (
     value    => $post_max_size,
   }
 
+  php::config { 'php-upload-max-filesize':
+    file  => "${php::params::config_root_ini}/general_settings.ini",
+    section  => 'PHP',
+    setting  => 'upload_max_filesize',
+    value    => $upload_max_filesize,
+  }
+
+
   php::config { 'php-log-errors':
     file  => "${php::params::config_root_ini}/general_settings.ini",
     section  => 'PHP',

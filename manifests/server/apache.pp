@@ -6,6 +6,8 @@ class drupal_php::server::apache (
     $server_manage_service = $drupal_php::params::server_manage_service,
     $server_service_enable = $drupal_php::params::server_service_enable,
     $server_service_ensure = $drupal_php::params::server_service_ensure,
+    $ssl = false,
+    $ssl_port = 443
   ) {
 
   class { '::apache':
@@ -72,6 +74,14 @@ class drupal_php::server::apache (
       }
     }
     apache::listen { $server_port: }
+    apache::namevirtualhost { "*:${server_port}": }
+    if ($ssl) {
+      apache::listen { $ssl_port: }
+      apache::namevirtualhost { "*:${ssl_port}": }
+    }
+  }
+  else {
+    apache::namevirtualhost { '*': }
   }
 
   include php::apache
