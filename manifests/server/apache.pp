@@ -26,29 +26,33 @@ class drupal_php::server::apache (
     Php::Extension <| |> -> Php::Config <| |> ~> Service['httpd']
   }
 
-  apache::mod{ 'actions': }
   # apache::mod { 'alias': }
-  apache::mod { 'auth_basic': }
-  apache::mod { 'authn_file': }
-  apache::mod { 'authz_default': }
-  apache::mod { 'authz_groupfile': }
+  # apache::mod { 'authz_default': }
   # apache::mod { 'authz_host': }
-  apache::mod { 'authz_user': }
-  apache::mod { 'deflate': }
-  apache::mod { 'dir': }
-  apache::mod { 'env': }
-  apache::mod { 'expires': }
-  apache::mod { 'headers': }
-  apache::mod { 'mime': }
-  apache::mod { 'negotiation': }
-  apache::mod { 'reqtimeout': }
   # apache::mod { 'request_arrived': }
-  apache::mod { 'rewrite': }
-  apache::mod { 'setenvif': }
-  apache::mod { 'ssl': }
-  apache::mod { 'status': }
-  apache::mod { 'suexec': }
-  apache::mod { 'xsendfile': }
+  $apache_mods = [
+    'actions',
+    'auth_basic',
+    'authn_file',
+    'authz_groupfile',
+    'authz_user',
+    'deflate',
+    'dir',
+    'env',
+    'expires',
+    'headers',
+    'mime',
+    'negotiation',
+    'reqtimeout',
+    'rewrite',
+    'setenvif',
+    'ssl',
+    'status',
+    'suexec',
+    'xsendfile',
+  ]
+
+  ensure_resource('apache::mod', $apache_mods)
 
   $vhost_ensure = $server_default_vhost ? {
     true  => 'present',
