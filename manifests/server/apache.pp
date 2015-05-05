@@ -8,7 +8,28 @@ class drupal_php::server::apache (
     $server_service_ensure = $drupal_php::params::server_service_ensure,
     $ssl = false,
     $ssl_port = 443,
-    $purge_configs = true
+    $purge_configs = true,
+    $apache_mods = [
+      'actions',
+      'auth_basic',
+      'authn_file',
+      'authz_groupfile',
+      'authz_user',
+      'deflate',
+      'dir',
+      'env',
+      'expires',
+      'headers',
+      'mime',
+      'negotiation',
+      'reqtimeout',
+      'rewrite',
+      'setenvif',
+      'ssl',
+      'status',
+      'suexec',
+      'xsendfile',
+    ]
   ) {
 
   class { '::apache':
@@ -26,31 +47,11 @@ class drupal_php::server::apache (
     Php::Extension <| |> -> Php::Config <| |> ~> Service['httpd']
   }
 
+  # TODO: I think we might need these
   # apache::mod { 'alias': }
   # apache::mod { 'authz_default': }
   # apache::mod { 'authz_host': }
   # apache::mod { 'request_arrived': }
-  $apache_mods = [
-    'actions',
-    'auth_basic',
-    'authn_file',
-    'authz_groupfile',
-    'authz_user',
-    'deflate',
-    'dir',
-    'env',
-    'expires',
-    'headers',
-    'mime',
-    'negotiation',
-    'reqtimeout',
-    'rewrite',
-    'setenvif',
-    'ssl',
-    'status',
-    'suexec',
-    'xsendfile',
-  ]
 
   ensure_resource('apache::mod', $apache_mods)
 
