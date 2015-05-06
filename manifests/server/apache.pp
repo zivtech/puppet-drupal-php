@@ -25,7 +25,6 @@ class drupal_php::server::apache (
       'reqtimeout',
       'rewrite',
       'setenvif',
-      'ssl',
       'status',
       'suexec',
       'xsendfile',
@@ -85,6 +84,7 @@ class drupal_php::server::apache (
     if ($ssl) {
       apache::listen { $ssl_port: }
       apache::namevirtualhost { "*:${ssl_port}": }
+      apache::mod { 'ssl': }
     }
   }
   else {
