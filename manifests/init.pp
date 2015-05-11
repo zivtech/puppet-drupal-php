@@ -75,6 +75,8 @@ class drupal_php (
 
   include php::pear
 
+  include php::extension::curl
+
   include php::extension::ldap
 
   # TODO: do we want memcache or memcached

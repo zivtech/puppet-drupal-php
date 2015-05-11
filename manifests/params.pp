@@ -1,7 +1,8 @@
+# Ensure php::params is instantiated or we get warnings.
 class drupal_php::params (
   $server = 'apache',
   $server_port = 80
-) {
+) inherits php::params {
 
   $memory_limit = '128M'
   $max_execution_time = 30
