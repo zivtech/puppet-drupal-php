@@ -15,13 +15,16 @@ class drupal_php::server::apache (
       'authn_file',
       'authz_groupfile',
       'authz_user',
+      'autoindex',
       'deflate',
       'dir',
       'env',
       'expires',
       'headers',
       'mime',
+      'mime_magic',
       'negotiation',
+      'php5',
       'reqtimeout',
       'rewrite',
       'setenvif',
@@ -32,7 +35,7 @@ class drupal_php::server::apache (
   ) {
 
   class { '::apache':
-    default_mods   => [],
+    default_mods   => $apache_mods,
     mpm_module     => $mpm_module,
     default_vhost  => false,
     service_manage => $server_manage_service,
@@ -51,8 +54,6 @@ class drupal_php::server::apache (
   # apache::mod { 'authz_default': }
   # apache::mod { 'authz_host': }
   # apache::mod { 'request_arrived': }
-
-  ensure_resource('apache::mod', $apache_mods)
 
   $vhost_ensure = $server_default_vhost ? {
     true  => 'present',
@@ -84,7 +85,7 @@ class drupal_php::server::apache (
     if ($ssl) {
       apache::listen { $ssl_port: }
       apache::namevirtualhost { "*:${ssl_port}": }
-      apache::mod { 'ssl': }
+      include apache::mod::ssl
     }
   }
   else {
