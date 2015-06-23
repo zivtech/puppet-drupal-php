@@ -165,11 +165,11 @@ class drupal_php (
     setting  => 'display_errors',
     value    => $display_errors,
   }
-  
-  php::config { 'php-log-file':
+
+  php::config { 'php-error-log':
     file  => "${php::params::config_root_ini}/general_settings.ini",
     section  => 'PHP',
-    setting  => 'log_file',
+    setting  => 'error_log',
     value    => "${error_log_directory}/${error_log_file}",
   }
 
@@ -187,7 +187,7 @@ class drupal_php (
       group  => $server_group,
     }
   }
-  
+
   # Unfotunately, old ubuntu packages use deprecated comments.
   exec { 'clean deprecated comments in /etc/php5/conf.d':
     command => "find ${php::params::config_root_ini}/* -type f -exec sed -i 's/#/;/g' {} \\;",
