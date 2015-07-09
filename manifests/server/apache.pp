@@ -24,7 +24,6 @@ class drupal_php::server::apache (
       'mime',
       'mime_magic',
       'negotiation',
-      'php5',
       'reqtimeout',
       'rewrite',
       'setenvif',
@@ -92,5 +91,5 @@ class drupal_php::server::apache (
     apache::namevirtualhost { '*': }
   }
 
-  include php::apache
+  include apache::mod::php
 }
