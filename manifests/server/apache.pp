@@ -3,6 +3,7 @@ class drupal_php::server::apache (
     $server_port = $drupal_php::params::server_port,
     $mpm_module = 'prefork',
     $server_default_vhost = true,
+    $default_vhost_docroot = $::apache::docroot,
     $server_manage_service = $drupal_php::params::server_manage_service,
     $server_service_enable = $drupal_php::params::server_service_enable,
     $server_service_ensure = $drupal_php::params::server_service_ensure,
@@ -61,7 +62,7 @@ class drupal_php::server::apache (
   ::apache::vhost { '000-default':
     ensure          => $vhost_ensure,
     port            => $server_port,
-    docroot         => $::apache::docroot,
+    docroot         => $default_vhost_docroot,
     scriptalias     => $::apache::scriptalias,
     serveradmin     => $::apache::serveradmin,
     access_log_file => $::apache::access_log_file,
