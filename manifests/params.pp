@@ -1,7 +1,13 @@
 # Ensure php::params is instantiated or we get warnings.
 class drupal_php::params (
   $server = 'apache',
-  $server_port = 80
+  $server_port = 80,
+  $default_vhost_docroot_owner = 'root',
+  $default_vhost_docroot_group = 'root',
+  $default_vhost_content = "<html><body><h1>It works!</h1>
+<p>This is the default web page for this server.</p>
+<p>The web server software is running but no content has been added, yet.</p>
+</body></html>"
 ) inherits php::params {
 
   $memory_limit = '128M'
@@ -38,10 +44,12 @@ class drupal_php::params (
         'RedHat', 'CentOS', 'Fedora', 'Scientific', 'Amazon', 'OracleLinux', 'SLC': {
           $apache_service_name = 'httpd'
           $server_user = 'apache'
+          $default_vhost_docroot = '/var/www/html/default'
         }
         'Debian', 'Ubuntu': {
           $apache_service_name = 'apache2'
           $server_user = 'www-data'
+          $default_vhost_docroot = '/var/www/default'
         }
         default: {
           fail("\"${module_name}\" provides no package default value for \"${::operatingsystem}\"")
