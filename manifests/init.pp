@@ -1,40 +1,3 @@
-# == Class: drupal_php
-#
-# Full description of class drupal_php here.
-#
-# === Parameters
-#
-# Document parameters here.
-#
-# [*sample_parameter*]
-#   Explanation of what this parameter affects and what it defaults to.
-#   e.g. "Specify one or more upstream ntp servers as an array."
-#
-# === Variables
-#
-# Here you should define a list of variables that this module would require.
-#
-# [*sample_variable*]
-#   Explanation of how this variable affects the funtion of this class and if
-#   it has a default. e.g. "The parameter enc_ntp_servers must be set by the
-#   External Node Classifier as a comma separated list of hostnames." (Note,
-#   global variables should be avoided in favor of class parameters as
-#   of Puppet 2.6.)
-#
-# === Examples
-#
-#  class { 'drupal_php':
-#    servers => [ 'pool.ntp.org', 'ntp.local.company.com' ],
-#  }
-#
-# === Authors
-#
-# Author Name <author@domain.com>
-#
-# === Copyright
-#
-# Copyright 2015 Your name here, unless otherwise noted.
-#
 class drupal_php (
   $server                      = $drupal_php::params::server,
   $opcache                     = 'opcache',
@@ -85,7 +48,7 @@ class drupal_php (
 
   # TODO: do we want memcache or memcached
   include php::extension::memcached
-  
+
   include php::extension::mysql
 
   # php module wants to use apt as the provider but the package isn't available on ubuntu 12.04.
@@ -93,7 +56,7 @@ class drupal_php (
     provider => 'pecl',
     package  => 'redis',
   }->
-  
+
   php::config { 'redis_conf':
     file  => "${php::params::config_root_ini}/redis.ini",
     config => [

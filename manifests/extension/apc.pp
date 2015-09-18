@@ -64,4 +64,24 @@ class drupal_php::extension::apc (
       "set .anon/apc.stat_ctime $stat_ctime",
     ],
   }
+
+  if $::php_version == '' or versioncmp($::php_version, '5.4') >= 0 {
+    file { '/etc/php5/apache2/conf.d/20-apc_settings.ini':
+      target  => "${php::params::config_root_ini}/apc_settings.ini",
+      mode    => '0644',
+      owner   => 'root',
+      group   => 'root',
+      notify  => Service['httpd'],
+      require => Php::Config['apc_settings'],
+    }
+
+    file { '/etc/php5/cli/conf.d/20-apc_settings.ini':
+      target  => "${php::params::config_root_ini}/apc_settings.ini",
+      mode    => '0644',
+      owner   => 'root',
+      group   => 'root',
+      notify  => Service['httpd'],
+      require => Php::Config['apc_settings'],
+    }
+  }
 }
