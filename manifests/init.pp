@@ -1,25 +1,26 @@
 class drupal_php (
-  $server                      = $drupal_php::params::server,
-  $opcache                     = 'opcache',
-  $upload_max_filesize         = $drupal_php::params::upload_max_filesize,
-  $timezone                    = $drupal_php::params::timezone,
-  $post_max_size               = $drupal_php::params::post_max_size,
-  $max_execution_time          = $drupal_php::params::max_execution_time,
-  $memory_limit                = $drupal_php::params::memory_limit,
-  $display_errors              = $drupal_php::params::display_errors,
-  $log_errors                  = $drupal_php::params::log_errors,
-  $error_log_file              = $drupal_php::params::error_log_file,
-  $error_log_directory         = $drupal_php::params::error_log_directory,
-  $manage_log_file             = $drupal_php::params::manage_log_file,
-  $server_user                 = $drupal_php::params::server_user,
-  $server_group                = $drupal_php::params::server_group,
-  $server_manage_service       = $drupal_php::params::server_manage_service,
-  $server_service_enable       = $drupal_php::params::server_service_enable,
-  $server_service_ensure       = $drupal_php::params::server_service_ensure,
-  $default_vhost_docroot       = $drupal_php::params::default_vhost_docroot,
-  $default_vhost_docroot_owner = $drupal_php::params::default_vhost_docroot_owner,
-  $default_vhost_docroot_group = $drupal_php::params::default_vhost_docroot_group,
-  $default_vhost_content       = $drupal_php::params::default_vhost_content,
+
+ $default_vhost_content       = $drupal_php::params::default_vhost_content,
+ $default_vhost_docroot       = $drupal_php::params::default_vhost_docroot,
+ $default_vhost_docroot_group = $drupal_php::params::default_vhost_docroot_group,
+ $default_vhost_docroot_owner = $drupal_php::params::default_vhost_docroot_owner,
+ $display_errors              = $drupal_php::params::display_errors,
+ $error_log_directory         = $drupal_php::params::error_log_directory,
+ $error_log_file              = $drupal_php::params::error_log_file,
+ $log_errors                  = $drupal_php::params::log_errors,
+ $manage_log_file             = $drupal_php::params::manage_log_file,
+ $max_execution_time          = $drupal_php::params::max_execution_time,
+ $memory_limit                = $drupal_php::params::memory_limit,
+ $opcache                     = 'opcache',
+ $post_max_size               = $drupal_php::params::post_max_size,
+ $server                      = $drupal_php::params::server,
+ $server_group                = $drupal_php::params::server_group,
+ $server_manage_service       = $drupal_php::params::server_manage_service,
+ $server_service_enable       = $drupal_php::params::server_service_enable,
+ $server_service_ensure       = $drupal_php::params::server_service_ensure
+ $server_user                 = $drupal_php::params::server_user,
+ $timezone                    = $drupal_php::params::timezone,
+ $upload_max_filesize         = $drupal_php::params::upload_max_filesize,
 ) inherits drupal_php::params {
 
 
@@ -152,6 +153,28 @@ class drupal_php (
       ensure => 'file',
       owner  => $server_user,
       group  => $server_group,
+    }
+  }
+
+
+  if $::php_version == '' or versioncmp($::php_version, '5.4') >= 0 {
+    file { '/etc/php5/apache2/conf.d/20-general_settings.ini':
+      target  => "${php::params::config_root_ini}/general_settings.ini",
+      mode    => '0644',
+      owner   => 'root',
+      group   => 'root',
+      notify  => Service['httpd'],
+      require => Php::Config['php-upload-max-filesize'],
+
+    }
+
+    file { '/etc/php5/cli/conf.d/20-general_settings.ini':
+      target  => "${php::params::config_root_ini}/general_settings.ini",
+      mode    => '0644',
+      owner   => 'root',
+      group   => 'root',
+      notify  => Service['httpd'],
+      require => Php::Config['php-upload-max-filesize'],
     }
   }
 
