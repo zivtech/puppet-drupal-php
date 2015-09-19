@@ -80,7 +80,7 @@ class drupal_php (
       include drupal_php::extension::apc
     }
     'opcache': {
-      include php::extension::opcache
+      include drupal_php::extension::opcache
     }
   }
 
