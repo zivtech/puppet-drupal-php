@@ -12,7 +12,7 @@ class drupal_php (
  $manage_log_file             = $drupal_php::params::manage_log_file,
  $max_execution_time          = $drupal_php::params::max_execution_time,
  $memory_limit                = $drupal_php::params::memory_limit,
- $opcache                     = 'opcache',
+ $opcache                     = $drupal_php::params::opcache,
  $post_max_size               = $drupal_php::params::post_max_size,
  $server                      = $drupal_php::params::server,
  $server_group                = $drupal_php::params::server_group,
@@ -77,11 +77,16 @@ class drupal_php (
   include php::extension::imagick
 
   case $opcache {
+    'none': {
+    }
     'apc': {
       include drupal_php::extension::apc
     }
     'opcache': {
       include drupal_php::extension::opcache
+    }
+    default: {
+       warning("drupal_php does not support the sepcified opcache: `${opcache}")
     }
   }
 
