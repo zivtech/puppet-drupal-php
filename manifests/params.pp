@@ -16,7 +16,7 @@ class drupal_php::params (
   $upload_max_filesize = '200M'
   $error_log_directory = '/var/log/php'
   $error_log_file = 'error.log'
-  $error_log = "${error_log_directory}/${error_log_file}",
+  $error_log = "${error_log_directory}/${error_log_file}"
   $manage_log_file = true
   $display_errors  = 'Off'
   $log_errors = 'On'
