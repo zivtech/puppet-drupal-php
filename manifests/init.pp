@@ -5,6 +5,7 @@ class drupal_php (
  $default_vhost_docroot_group = $drupal_php::params::default_vhost_docroot_group,
  $default_vhost_docroot_owner = $drupal_php::params::default_vhost_docroot_owner,
  $display_errors              = $drupal_php::params::display_errors,
+ $error_log                   = $drupal_php::params::error_log,
  $error_log_directory         = $drupal_php::params::error_log_directory,
  $error_log_file              = $drupal_php::params::error_log_file,
  $log_errors                  = $drupal_php::params::log_errors,
@@ -138,7 +139,7 @@ class drupal_php (
     file  => "${php::params::config_root_ini}/general_settings.ini",
     section  => 'PHP',
     setting  => 'error_log',
-    value    => "${error_log_directory}/${error_log_file}",
+    value    => $error_log,
   }
 
   if ($manage_log_file) {
