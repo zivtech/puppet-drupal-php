@@ -76,7 +76,7 @@ class drupal_php::server::apache (
     ip              => $::apache::ip,
     logroot_mode    => $::apache::logroot_mode,
   }
-  if ($vhost_ensure) {
+  if ($server_default_vhost) {
     file { $default_vhost_docroot:
       ensure  => directory,
       path    => $default_vhost_docroot,
