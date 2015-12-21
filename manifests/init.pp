@@ -9,8 +9,10 @@ class drupal_php (
   $error_log_file              = $drupal_php::params::error_log_file,
   $log_errors                  = $drupal_php::params::log_errors,
   $manage_log_file             = $drupal_php::params::manage_log_file,
-  $max_execution_time          = $drupal_php::params::max_execution_time,
-  $memory_limit                = $drupal_php::params::memory_limit,
+  $max_execution_time_server   = $drupal_php::params::max_execution_time_server,
+  $max_execution_time_cli      = $drupal_php::params::max_execution_time_cli,
+  $memory_limit_server         = $drupal_php::params::memory_limit_server,
+  $memory_limit_cli            = $drupal_php::params::memory_limit_cli,
   $opcache                     = $drupal_php::params::opcache,
   $post_max_size               = $drupal_php::params::post_max_size,
   $server                      = $drupal_php::params::server,
@@ -96,20 +98,6 @@ class drupal_php (
     value    => $timezone,
   }
 
-  php::config { 'php-memory-limit':
-    file  => "${php::params::config_root_ini}/general_settings.ini",
-    section  => 'PHP',
-    setting  => 'memory_limit',
-    value    => $memory_limit,
-  }
-
-  php::config { 'php-max-execution-time':
-    file  => "${php::params::config_root_ini}/general_settings.ini",
-    section  => 'PHP',
-    setting  => 'max_execution_time',
-    value    => $max_execution_time,
-  }
-
   php::config { 'php-post-max-size':
     file  => "${php::params::config_root_ini}/general_settings.ini",
     section  => 'PHP',
@@ -146,6 +134,34 @@ class drupal_php (
     value    => $error_log,
   }
 
+  php::config { 'php-memory-limit-server':
+    file  => "${php::params::config_root_ini}/server_settings.ini",
+    section  => 'PHP',
+    setting  => 'memory_limit',
+    value    => $memory_limit_server,
+  }
+
+  php::config { 'php-memory-limit-cli':
+    file  => "${php::params::config_root_ini}/cli_settings.ini",
+    section  => 'PHP',
+    setting  => 'memory_limit',
+    value    => $memory_limit_cli,
+  }
+
+  php::config { 'php-max-execution-time-server':
+    file  => "${php::params::config_root_ini}/server_settings.ini",
+    section  => 'PHP',
+    setting  => 'max_execution_time',
+    value    => $max_execution_time_server,
+  }
+
+  php::config { 'php-max-execution-time-cli':
+    file  => "${php::params::config_root_ini}/cli_settings.ini",
+    section  => 'PHP',
+    setting  => 'max_execution_time',
+    value    => $max_execution_time_cli,
+  }
+
   if ($manage_log_file) {
     file { 'php-error-log-directory':
       path   => $error_log_directory,
@@ -170,7 +186,14 @@ class drupal_php (
       group   => 'root',
       notify  => Service['httpd'],
       require => Php::Config['php-upload-max-filesize'],
-
+    }
+    
+    file { '/etc/php5/apache2/conf.d/20-server_settings.ini':
+      target  => "${php::params::config_root_ini}/server_settings.ini",
+      mode    => '0644',
+      owner   => 'root',
+      group   => 'root',
+      notify  => Service['httpd'],
     }
 
     file { '/etc/php5/cli/conf.d/20-general_settings.ini':
@@ -180,6 +203,14 @@ class drupal_php (
       group   => 'root',
       notify  => Service['httpd'],
       require => Php::Config['php-upload-max-filesize'],
+    }
+    
+    file { '/etc/php5/cli/conf.d/20-cli_settings.ini':
+      target  => "${php::params::config_root_ini}/cli_settings.ini",
+      mode    => '0644',
+      owner   => 'root',
+      group   => 'root',
+      notify  => Service['httpd'],
     }
   }
 
