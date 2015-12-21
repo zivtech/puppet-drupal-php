@@ -26,7 +26,7 @@ puppet module install zivtech-drupal_php
 include drupal_php
 ````
 
-### Advanced Useage
+### Advanced Usage
 
 ```` puppet
 class { 'drupal_php':
