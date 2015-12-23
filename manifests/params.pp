@@ -11,7 +11,7 @@ class drupal_php::params (
 ) inherits php::params {
 
   $memory_limit_server = '128M'
-  $memery_limit_cli = '-1'
+  $memory_limit_cli = '-1'
   $max_execution_time = 30
   $post_max_size = '8M'
   $upload_max_filesize = '200M'
