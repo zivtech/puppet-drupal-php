@@ -89,22 +89,6 @@ class drupal_php (
        warning("drupal_php does not support the sepcified opcache: `${opcache}")
     }
   }
-  
-  file { '/etc/php5/apache2/conf.d/20-server_settings.ini':
-    path   => '/etc/php5/apache2/conf.d/20-server_settings.ini',
-    ensure => 'file',
-    owner   => 'root',
-    group   => 'root',
-    notify  => Service['httpd'],
-  }
-    
-  file { '/etc/php5/cli/conf.d/20-cli_settings.ini':
-    path  => '/etc/php5/cli/conf.d/20-cli_settings.ini',
-    ensure  => 'file',
-    owner   => 'root',
-    group   => 'root',
-    notify  => Service['httpd'],
-  }
 
   php::config { 'php-date-timezone':
     file  => "${php::params::config_root_ini}/general_settings.ini",
@@ -149,21 +133,21 @@ class drupal_php (
   }
 
   php::config { 'php-memory-limit-server':
-    file  => '/etc/php5/apache2/conf.d/20-server_settings.ini',
+    file  => '/etc/php5/apache2/php.ini',
     section  => 'PHP',
     setting  => 'memory_limit',
     value    => $memory_limit_server,
   }
 
   php::config { 'php-memory-limit-cli':
-    file  => '/etc/php5/apache2/conf.d/20-cli_settings.ini',
+    file  => '/etc/php5/cli/php.ini',
     section  => 'PHP',
     setting  => 'memory_limit',
     value    => $memory_limit_cli,
   }
 
   php::config { 'php-max-execution-time':
-    file  => '/etc/php5/apache2/conf.d/20-server_settings.ini',
+    file  => '/etc/php5/apache2/php.ini',
     section  => 'PHP',
     setting  => 'max_execution_time',
     value    => $max_execution_time,
