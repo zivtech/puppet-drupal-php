@@ -9,8 +9,7 @@ class drupal_php (
   $error_log_file              = $drupal_php::params::error_log_file,
   $log_errors                  = $drupal_php::params::log_errors,
   $manage_log_file             = $drupal_php::params::manage_log_file,
-  $max_execution_time_server   = $drupal_php::params::max_execution_time_server,
-  $max_execution_time_cli      = $drupal_php::params::max_execution_time_cli,
+  $max_execution_time          = $drupal_php::params::max_execution_time,
   $memory_limit_server         = $drupal_php::params::memory_limit_server,
   $memory_limit_cli            = $drupal_php::params::memory_limit_cli,
   $opcache                     = $drupal_php::params::opcache,
@@ -90,6 +89,22 @@ class drupal_php (
        warning("drupal_php does not support the sepcified opcache: `${opcache}")
     }
   }
+  
+  file { '/etc/php5/apache2/conf.d/20-server_settings.ini':
+    path   => '/etc/php5/apache2/conf.d/20-server_settings.ini',
+    ensure => 'file',
+    owner   => 'root',
+    group   => 'root',
+    notify  => Service['httpd'],
+  }
+    
+  file { '/etc/php5/cli/conf.d/20-cli_settings.ini':
+    path  => '/etc/php5/cli/conf.d/20-cli_settings.ini',
+    ensure  => 'file',
+    owner   => 'root',
+    group   => 'root',
+    notify  => Service['httpd'],
+  }
 
   php::config { 'php-date-timezone':
     file  => "${php::params::config_root_ini}/general_settings.ini",
@@ -111,7 +126,6 @@ class drupal_php (
     setting  => 'upload_max_filesize',
     value    => $upload_max_filesize,
   }
-
 
   php::config { 'php-log-errors':
     file  => "${php::params::config_root_ini}/general_settings.ini",
@@ -135,31 +149,24 @@ class drupal_php (
   }
 
   php::config { 'php-memory-limit-server':
-    file  => "${php::params::config_root_ini}/server_settings.ini",
+    file  => '/etc/php5/apache2/conf.d/20-server_settings.ini',
     section  => 'PHP',
     setting  => 'memory_limit',
     value    => $memory_limit_server,
   }
 
   php::config { 'php-memory-limit-cli':
-    file  => "${php::params::config_root_ini}/cli_settings.ini",
+    file  => '/etc/php5/apache2/conf.d/20-cli_settings.ini',
     section  => 'PHP',
     setting  => 'memory_limit',
     value    => $memory_limit_cli,
   }
 
-  php::config { 'php-max-execution-time-server':
-    file  => "${php::params::config_root_ini}/server_settings.ini",
+  php::config { 'php-max-execution-time':
+    file  => '/etc/php5/apache2/conf.d/20-server_settings.ini',
     section  => 'PHP',
     setting  => 'max_execution_time',
-    value    => $max_execution_time_server,
-  }
-
-  php::config { 'php-max-execution-time-cli':
-    file  => "${php::params::config_root_ini}/cli_settings.ini",
-    section  => 'PHP',
-    setting  => 'max_execution_time',
-    value    => $max_execution_time_cli,
+    value    => $max_execution_time,
   }
 
   if ($manage_log_file) {
@@ -188,14 +195,6 @@ class drupal_php (
       require => Php::Config['php-upload-max-filesize'],
     }
     
-    file { '/etc/php5/apache2/conf.d/20-server_settings.ini':
-      target  => "${php::params::config_root_ini}/server_settings.ini",
-      mode    => '0644',
-      owner   => 'root',
-      group   => 'root',
-      notify  => Service['httpd'],
-    }
-
     file { '/etc/php5/cli/conf.d/20-general_settings.ini':
       target  => "${php::params::config_root_ini}/general_settings.ini",
       mode    => '0644',
@@ -203,14 +202,6 @@ class drupal_php (
       group   => 'root',
       notify  => Service['httpd'],
       require => Php::Config['php-upload-max-filesize'],
-    }
-    
-    file { '/etc/php5/cli/conf.d/20-cli_settings.ini':
-      target  => "${php::params::config_root_ini}/cli_settings.ini",
-      mode    => '0644',
-      owner   => 'root',
-      group   => 'root',
-      notify  => Service['httpd'],
     }
   }
 
