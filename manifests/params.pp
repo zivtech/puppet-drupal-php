@@ -10,8 +10,10 @@ class drupal_php::params (
   $server_port = 80
 ) inherits php::params {
 
-  $memory_limit = '128M'
-  $max_execution_time = 30
+  $memory_limit_server = '128M'
+  $memery_limit_cli = '-1'
+  $max_execution_time_server = 30
+  $max_execution_time_cli = -1
   $post_max_size = '8M'
   $upload_max_filesize = '200M'
   $error_log_directory = '/var/log/php'
