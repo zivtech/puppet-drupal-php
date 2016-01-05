@@ -132,22 +132,19 @@ class drupal_php (
     value    => $error_log,
   }
 
-  php::config { 'php-memory-limit-server':
-    file  => '/etc/php5/apache2/php.ini',
+  php::apache::config { 'php-memory-limit-server':
     section  => 'PHP',
     setting  => 'memory_limit',
     value    => $memory_limit_server,
   }
 
-  php::config { 'php-memory-limit-cli':
-    file  => '/etc/php5/cli/php.ini',
+  php::cli::config { 'php-memory-limit-cli':
     section  => 'PHP',
     setting  => 'memory_limit',
     value    => $memory_limit_cli,
   }
 
-  php::config { 'php-max-execution-time':
-    file  => '/etc/php5/apache2/php.ini',
+  php::apache::config { 'php-max-execution-time':
     section  => 'PHP',
     setting  => 'max_execution_time',
     value    => $max_execution_time,
