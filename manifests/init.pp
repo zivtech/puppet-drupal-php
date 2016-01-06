@@ -10,7 +10,8 @@ class drupal_php (
   $log_errors                  = $drupal_php::params::log_errors,
   $manage_log_file             = $drupal_php::params::manage_log_file,
   $max_execution_time          = $drupal_php::params::max_execution_time,
-  $memory_limit                = $drupal_php::params::memory_limit,
+  $memory_limit_server         = $drupal_php::params::memory_limit_server,
+  $memory_limit_cli            = $drupal_php::params::memory_limit_cli,
   $opcache                     = $drupal_php::params::opcache,
   $post_max_size               = $drupal_php::params::post_max_size,
   $server                      = $drupal_php::params::server,
@@ -52,6 +53,9 @@ class drupal_php (
 
   include php::extension::mysql
 
+  include php::apache
+
+  include php::cli
   # php module wants to use apt as the provider but the package isn't available on ubuntu 12.04.
   class { 'php::extension::redis':
     provider => 'pecl',
@@ -96,20 +100,6 @@ class drupal_php (
     value    => $timezone,
   }
 
-  php::config { 'php-memory-limit':
-    file  => "${php::params::config_root_ini}/general_settings.ini",
-    section  => 'PHP',
-    setting  => 'memory_limit',
-    value    => $memory_limit,
-  }
-
-  php::config { 'php-max-execution-time':
-    file  => "${php::params::config_root_ini}/general_settings.ini",
-    section  => 'PHP',
-    setting  => 'max_execution_time',
-    value    => $max_execution_time,
-  }
-
   php::config { 'php-post-max-size':
     file  => "${php::params::config_root_ini}/general_settings.ini",
     section  => 'PHP',
@@ -123,7 +113,6 @@ class drupal_php (
     setting  => 'upload_max_filesize',
     value    => $upload_max_filesize,
   }
-
 
   php::config { 'php-log-errors':
     file  => "${php::params::config_root_ini}/general_settings.ini",
@@ -144,6 +133,24 @@ class drupal_php (
     section  => 'PHP',
     setting  => 'error_log',
     value    => $error_log,
+  }
+
+  php::apache::config { 'php-memory-limit-server':
+    section  => 'PHP',
+    setting  => 'memory_limit',
+    value    => $memory_limit_server,
+  }
+
+  php::cli::config { 'php-memory-limit-cli':
+    section  => 'PHP',
+    setting  => 'memory_limit',
+    value    => $memory_limit_cli,
+  }
+
+  php::apache::config { 'php-max-execution-time':
+    section  => 'PHP',
+    setting  => 'max_execution_time',
+    value    => $max_execution_time,
   }
 
   if ($manage_log_file) {
@@ -170,9 +177,8 @@ class drupal_php (
       group   => 'root',
       notify  => Service['httpd'],
       require => Php::Config['php-upload-max-filesize'],
-
     }
-
+    
     file { '/etc/php5/cli/conf.d/20-general_settings.ini':
       target  => "${php::params::config_root_ini}/general_settings.ini",
       mode    => '0644',
