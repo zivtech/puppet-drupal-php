@@ -147,10 +147,28 @@ class drupal_php (
     value    => $memory_limit_cli,
   }
 
-  php::apache::config { 'php-max-execution-time':
+  # We previously had the memory limit in general settings, 
+  # so we remove it for users when they update.
+  php::config { 'php-memory-limit':
+    ensure => 'absent',
+    file  => "${php::params::config_root_ini}/general_settings.ini",
+    section  => 'PHP',
+    setting  => 'memory_limit',
+  }
+
+  php::apache::config { 'php-max-execution-time-server':
     section  => 'PHP',
     setting  => 'max_execution_time',
     value    => $max_execution_time,
+  }
+
+  # We previously had the max execution time in general settings, 
+  # so we remove it for users when they update.
+  php::config { 'php-max-execution-time':
+    ensure => 'absent',
+    file  => "${php::params::config_root_ini}/general_settings.ini",
+    section  => 'PHP',
+    setting  => 'max_execution_time',
   }
 
   if ($manage_log_file) {
