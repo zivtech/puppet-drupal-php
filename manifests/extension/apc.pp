@@ -1,5 +1,5 @@
 class drupal_php::extension::apc (
-  $shm_size = 256M,
+  $shm_size = '256M',
   $shm_segments = 1,
   $optimization = 0,
   $num_files_hint = 512,
@@ -19,8 +19,8 @@ class drupal_php::extension::apc (
   $report_autofilter = 0,
   $include_once_override = 0,
   $rfc1867 = 0,
-  $rfc1867_prefix = "upload_",
-  $rfc1867_name = "APC_UPLOAD_PROGRESS",
+  $rfc1867_prefix = 'upload_',
+  $rfc1867_name = 'APC_UPLOAD_PROGRESS',
   $rfc1867_freq = 0,
   $localcache = 1,
   $localcache_size = 512,
