@@ -100,7 +100,7 @@ class drupal_php::server::apache (
         content => template('apache/listen.erb'),
       }
     }
-    apache::listen { $server_port: }
+    apache::listen { "${server_port}": }
     apache::namevirtualhost { "*:${server_port}": }
     if ($ssl) {
       apache::listen { $ssl_port: }
