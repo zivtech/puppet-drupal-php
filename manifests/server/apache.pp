@@ -3,7 +3,6 @@ class drupal_php::server::apache (
     $server_port = $drupal_php::params::server_port,
     $mpm_module = 'prefork',
     $server_default_vhost = true,
-    $default_vhost_docroot = $::apache::docroot,
     $server_manage_service = $drupal_php::params::server_manage_service,
     $server_service_enable = $drupal_php::params::server_service_enable,
     $server_service_ensure = $drupal_php::params::server_service_ensure,
@@ -84,7 +83,7 @@ class drupal_php::server::apache (
       group   => $default_vhost_docroot_group,
     }->
     file { "${default_vhost_docroot}/index.html":
-      ensure  => file,
+      ensure  => 'file',
       content => $default_vhost_content,
       path    => "${default_vhost_docroot}/index.html",
       owner   => $default_vhost_docroot_owner,
@@ -96,12 +95,12 @@ class drupal_php::server::apache (
     # This appears by default, if the port is not 80 we should remove it.
     if ($server_port != 80) {
       concat::fragment { "Listen 80":
-        ensure  => absent,
+        ensure  => 'absent',
         target  => $::apache::ports_file,
         content => template('apache/listen.erb'),
       }
     }
-    apache::listen { $server_port: }
+    apache::listen { "${server_port}": }
     apache::namevirtualhost { "*:${server_port}": }
     if ($ssl) {
       apache::listen { $ssl_port: }
