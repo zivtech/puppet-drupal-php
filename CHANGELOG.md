@@ -1,3 +1,7 @@
+### v3.0.2
+
+ - Fix an issue in which provisioning might fail if a port number was interpreted as an integer.
+
 ### v3.0.1
 
  - Fixes an error in which a variable was defined multiple times.
