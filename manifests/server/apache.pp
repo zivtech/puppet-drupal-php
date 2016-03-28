@@ -103,7 +103,7 @@ class drupal_php::server::apache (
     apache::listen { "${server_port}": }
     apache::namevirtualhost { "*:${server_port}": }
     if ($ssl) {
-      apache::listen { $ssl_port: }
+      apache::listen { "$ssl_port": }
       apache::namevirtualhost { "*:${ssl_port}": }
       include apache::mod::ssl
     }
