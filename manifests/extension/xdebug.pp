@@ -40,7 +40,7 @@ class drupal_php::extension::xdebug (
   if ($idekey) {
     php::config { 'xdebug_idekey':
       file    => "${php::params::config_root_ini}/xdebug.ini",
-      setting => 'xdebug.max_nesting_level',
+      setting => 'xdebug.idekey',
       value   => $idekey,
     }
   }
