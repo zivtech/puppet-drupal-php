@@ -18,6 +18,7 @@ class drupal_php::params (
   $error_log_directory = '/var/log/php'
   $error_log_file = 'error.log'
   $error_log = "${error_log_directory}/${error_log_file}"
+  $expose_php = 'Off'
   $manage_log_file = true
   $display_errors  = 'Off'
   $log_errors = 'On'
@@ -25,6 +26,8 @@ class drupal_php::params (
   $server_manage_service = true
   $server_service_enable = true
   $server_service_ensure = 'running'
+  $server_tokens = 'Prod'
+  $server_signature = 'Off'
 
   if $::php_version == '' or versioncmp($::php_version, '5.4') >= 0 {
     $opcache = 'opcache'

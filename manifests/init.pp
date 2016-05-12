@@ -7,6 +7,7 @@ class drupal_php (
   $error_log                   = $drupal_php::params::error_log,
   $error_log_directory         = $drupal_php::params::error_log_directory,
   $error_log_file              = $drupal_php::params::error_log_file,
+  $expose_php                  = $drupal_php::params::expose_php,
   $log_errors                  = $drupal_php::params::log_errors,
   $manage_log_file             = $drupal_php::params::manage_log_file,
   $max_execution_time          = $drupal_php::params::max_execution_time,
@@ -133,6 +134,13 @@ class drupal_php (
     section  => 'PHP',
     setting  => 'error_log',
     value    => $error_log,
+  }
+
+  php::config { 'php-expose':
+    file  => "${php::params::config_root_ini}/general_settings.ini",
+    section  => 'PHP',
+    setting  => 'expose_php',
+    value    => $expose_php,
   }
 
   php::apache::config { 'php-memory-limit-server':
