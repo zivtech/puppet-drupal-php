@@ -6,6 +6,8 @@ class drupal_php::server::apache (
     $server_manage_service = $drupal_php::params::server_manage_service,
     $server_service_enable = $drupal_php::params::server_service_enable,
     $server_service_ensure = $drupal_php::params::server_service_ensure,
+    $server_signature = $drupal_php::params::server_signature,
+    $server_tokens = $drupal_php::params::server_tokens,
     $default_vhost_docroot = $drupal_php::params::default_vhost_docroot,
     $default_vhost_docroot_owner = $drupal_php::params::default_vhost_docroot_owner,
     $default_vhost_docroot_group = $drupal_php::params::default_vhost_docroot_group,
@@ -38,13 +40,15 @@ class drupal_php::server::apache (
   ) {
 
   class { '::apache':
-    default_mods   => $apache_mods,
-    mpm_module     => $mpm_module,
-    default_vhost  => false,
-    service_manage => $server_manage_service,
-    service_enable => $service_enable,
-    service_ensure => $server_service_ensure,
-    purge_configs  => $purge_configs,
+    default_mods     => $apache_mods,
+    mpm_module       => $mpm_module,
+    default_vhost    => false,
+    service_manage   => $server_manage_service,
+    service_enable   => $service_enable,
+    service_ensure   => $server_service_ensure,
+    purge_configs    => $purge_configs,
+    server_signature => $server_signature,
+    server_tokens    => $server_tokens,
   }
 
   if ($server_manage_service) {
