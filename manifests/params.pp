@@ -26,8 +26,8 @@ class drupal_php::params (
   $server_manage_service = true
   $server_service_enable = true
   $server_service_ensure = 'running'
-  $server_tokens = 'Prod'
-  $server_signature = 'Off'
+  #$server_tokens = 'Prod'
+  #$server_signature = 'Off'
 
   if $::php_version == '' or versioncmp($::php_version, '5.4') >= 0 {
     $opcache = 'opcache'
