@@ -1,3 +1,7 @@
+### v3.1.3
+ - Adjust handling of apache modules and default vhosts name.
+
+
 ### v3.0.2
 
  - Fix an issue in which provisioning might fail if a port number was interpreted as an integer.
