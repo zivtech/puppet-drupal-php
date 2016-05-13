@@ -13,32 +13,10 @@ class drupal_php::server::apache (
     $ssl = false,
     $ssl_port = 443,
     $purge_configs = true,
-    $apache_mods = [
-      'actions',
-      'auth_basic',
-      'authn_file',
-      'authz_groupfile',
-      'authz_user',
-      'autoindex',
-      'deflate',
-      'dir',
-      'env',
-      'expires',
-      'headers',
-      'mime',
-      'mime_magic',
-      'negotiation',
-      'reqtimeout',
-      'rewrite',
-      'setenvif',
-      'status',
-      'suexec',
-      'xsendfile',
-    ]
   ) {
 
   class { '::apache':
-    default_mods   => $apache_mods,
+    default_mods   => false,
     mpm_module     => $mpm_module,
     default_vhost  => false,
     service_manage => $server_manage_service,
@@ -47,16 +25,33 @@ class drupal_php::server::apache (
     purge_configs  => $purge_configs,
   }
 
+  # TODO Audit this list. Drupal actually doesn't need most of these.
+  class { '::apache::mod::actions': }
+  class { '::apache::mod::auth_basic': }
+  class { '::apache::mod::authn_file': }
+  class { '::apache::mod::authz_user': }
+  class { '::apache::mod::deflate': }
+  class { '::apache::mod::dir': }
+  class { '::apache::mod::headers': }
+  class { '::apache::mod::mime': }
+  class { '::apache::mod::mime_magic': }
+  class { '::apache::mod::negotiation': }
+  class { '::apache::mod::reqtimeout': }
+  class { '::apache::mod::rewrite': }
+  class { '::apache::mod::setenvif': }
+  class { '::apache::mod::status': }
+  class { '::apache::mod::suexec': }
+  class { '::apache::mod::xsendfile': }
+
+  # Add other apache mods we want (not defined in puppet apache module).
+  apache::mod { 'authz_groupfile': }
+  apache::mod { 'env': }
+  apache::mod { 'expires': }
+
   if ($server_manage_service) {
     # The puppet service resource name is always httpd in puppet with puppetlabs-apache.
     Php::Extension <| |> -> Php::Config <| |> ~> Service['httpd']
   }
-
-  # TODO: I think we might need these
-  # apache::mod { 'alias': }
-  # apache::mod { 'authz_default': }
-  # apache::mod { 'authz_host': }
-  # apache::mod { 'request_arrived': }
 
   $vhost_ensure = $server_default_vhost ? {
     true  => 'present',
@@ -71,9 +66,15 @@ class drupal_php::server::apache (
     scriptalias     => $::apache::scriptalias,
     serveradmin     => $::apache::serveradmin,
     access_log_file => $::apache::access_log_file,
-    priority        => '15',
+    priority        => false,
     ip              => $::apache::ip,
     logroot_mode    => $::apache::logroot_mode,
+    directories     => [
+      {
+        path    => $default_vhost_docroot,
+        options => ['-Indexes','+FollowSymLinks']
+      }
+    ],
   }
   if ($server_default_vhost) {
     file { $default_vhost_docroot:
