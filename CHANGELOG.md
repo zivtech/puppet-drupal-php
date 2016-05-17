@@ -1,4 +1,4 @@
-### v3.1.3
+### v3.1.0
  - Adjust handling of apache modules and default vhosts name.
 
 
