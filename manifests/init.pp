@@ -56,17 +56,19 @@ class drupal_php (
   include php::apache
 
   include php::cli
-  # php module wants to use apt as the provider but the package isn't available on ubuntu 12.04.
-  class { 'php::extension::redis':
-    provider => 'pecl',
-    package  => 'redis',
-  }->
+  # PECL install method is no longer available in 14.04. Using apt instead.
+  if $::operatingsystemrelease >= '14.04' {
+    class { 'php::extension::redis':
+      provider => 'apt',
+      package  => 'php5-redis',
+    }->
 
-  php::config { 'redis_conf':
-    file  => "${php::params::config_root_ini}/redis.ini",
-    config => [
-      'set ".anon/extension" "redis.so"'
-    ],
+    php::config { 'redis_conf':
+      file  => "${php::params::config_root_ini}/redis.ini",
+      config => [
+        'set ".anon/extension" "redis.so"'
+      ],
+    }
   }
 
   # Modifying the config file is failing.
