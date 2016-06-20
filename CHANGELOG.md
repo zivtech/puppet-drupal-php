@@ -1,6 +1,12 @@
+### v3.2.0
+ - Fix issue with installing php-redis. PECL updated the version of
+ php-redis and it no longer supports the php language version that
+ ships with ubuntu 14.04. Since earlier versions of ubuntu do not have
+ apt packages for php-redis, we drop support for php-redis on versions
+ prior to 14.04
+
 ### v3.1.0
  - Adjust handling of apache modules and default vhosts name.
-
 
 ### v3.0.2
 

@@ -5,7 +5,7 @@ php, specifically with Drupal in mind.  It wraps the most complete and popular
 [php module](https://forge.puppetlabs.com/nodes/php) on the forge and adds a ton of
 convenience settings that can be set from hierra.
 
-This module is thoroughly tested on Ubuntu 10.04, 12.04, and 14.04 and should be useable
+This module is thoroughly tested on Ubuntu 12.04, and 14.04 and should be useable
 right out of the box.  It currently supports running php in apache with mod_php and manages
 apache as well using [puppetlabs-apache](https://forge.puppetlabs.com/puppetlabs/apache).
 The module has been architected with the intention of adding fpm and nginx support, we're
