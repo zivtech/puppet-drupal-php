@@ -56,10 +56,9 @@ class drupal_php (
   include php::apache
 
   include php::cli
-  # PECL install method is no longer available in 14.04. Using apt instead.
-  if $::operatingsystemrelease >= '14.04' {
+  # PECL install method is no longer available. Requires PHP 7.0.0
+  if $::php_version == '' or versioncmp($::php_version, '5.5') >= 0 {
     class { 'php::extension::redis':
-      provider => 'apt',
       package  => 'php5-redis',
     }->
 
