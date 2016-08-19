@@ -1,3 +1,7 @@
+### v3.2.1
+ - Changes conditional to use PHP version rather than Ubuntu version
+ to allow for other Linux distros.
+
 ### v3.2.0
  - Fix issue with installing php-redis. PECL updated the version of
  php-redis and it no longer supports the php language version that
