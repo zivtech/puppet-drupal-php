@@ -7,6 +7,7 @@ class drupal_php (
   $error_log                   = $drupal_php::params::error_log,
   $error_log_directory         = $drupal_php::params::error_log_directory,
   $error_log_file              = $drupal_php::params::error_log_file,
+  $expose_php                  = $drupal_php::params::expose_php,
   $log_errors                  = $drupal_php::params::log_errors,
   $manage_log_file             = $drupal_php::params::manage_log_file,
   $max_execution_time          = $drupal_php::params::max_execution_time,
@@ -148,7 +149,7 @@ class drupal_php (
     value    => $memory_limit_cli,
   }
 
-  # We previously had the memory limit in general settings, 
+  # We previously had the memory limit in general settings,
   # so we remove it for users when they update.
   php::config { 'php-memory-limit':
     ensure => 'absent',
@@ -163,7 +164,13 @@ class drupal_php (
     value    => $max_execution_time,
   }
 
-  # We previously had the max execution time in general settings, 
+  php::apache::config { 'php-expose-php':
+    section  => 'PHP',
+    setting  => 'expose_php',
+    value    => $expose_php,
+  }
+
+  # We previously had the max execution time in general settings,
   # so we remove it for users when they update.
   php::config { 'php-max-execution-time':
     ensure => 'absent',
@@ -197,7 +204,7 @@ class drupal_php (
       notify  => Service['httpd'],
       require => Php::Config['php-upload-max-filesize'],
     }
-    
+
     file { '/etc/php5/cli/conf.d/20-general_settings.ini':
       target  => "${php::params::config_root_ini}/general_settings.ini",
       mode    => '0644',

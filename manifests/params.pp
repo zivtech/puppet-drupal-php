@@ -18,6 +18,7 @@ class drupal_php::params (
   $error_log_directory = '/var/log/php'
   $error_log_file = 'error.log'
   $error_log = "${error_log_directory}/${error_log_file}"
+  $expose_php = 'On'
   $manage_log_file = true
   $display_errors  = 'Off'
   $log_errors = 'On'
