@@ -35,6 +35,7 @@ class drupal_php (
 
   require wget
 
+/*
   include php
 
   include php::dev
@@ -221,5 +222,6 @@ class drupal_php (
     path => "/usr/bin:/usr/sbin:/bin",
     onlyif => "grep -qr '#' /etc/php5/conf.d"
   }
+  */
 
 }
