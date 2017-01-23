@@ -26,7 +26,6 @@ class drupal_php::server::apache (
   }
 
   # TODO Audit this list. Drupal actually doesn't need most of these.
-  class { '::apache::mod::actions': }
   class { '::apache::mod::auth_basic': }
   class { '::apache::mod::authn_file': }
   class { '::apache::mod::authz_user': }
@@ -50,7 +49,8 @@ class drupal_php::server::apache (
 
   if ($server_manage_service) {
     # The puppet service resource name is always httpd in puppet with puppetlabs-apache.
-    Php::Extension <| |> -> Php::Config <| |> ~> Service['httpd']
+    Php::Extension <| |> ~> Service['httpd']
+    Php::Config <| |> ~> Service['httpd']
   }
 
   $vhost_ensure = $server_default_vhost ? {

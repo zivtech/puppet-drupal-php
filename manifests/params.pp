@@ -27,7 +27,7 @@ class drupal_php::params (
   $server_service_enable = true
   $server_service_ensure = 'running'
 
-  if $::php_version == '' or versioncmp($::php_version, '5.4') >= 0 {
+  if $::phpversion == undef or versioncmp($::phpversion, '5.4') >= 0 {
     $opcache = 'opcache'
   }
   else {
