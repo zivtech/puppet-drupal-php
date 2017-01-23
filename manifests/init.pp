@@ -33,16 +33,6 @@ class drupal_php (
     server_service_ensure => $server_service_ensure,
   }
 
-  # TODO: Factor this in for old versions:
-  # apc       => {
-  #   provider => 'pecl',
-  #   settings => {
-  #     'apc/stat'       => '1',
-  #     'apc/stat_ctime' => '1',
-  #   },
-  #   sapi     => 'fpm',
-  # },
-
   class { '::php':
     fpm => false,
     extensions => {
