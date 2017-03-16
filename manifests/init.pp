@@ -10,7 +10,9 @@ class drupal_php (
   $expose_php                  = $drupal_php::params::expose_php,
   $log_errors                  = $drupal_php::params::log_errors,
   $manage_log_file             = $drupal_php::params::manage_log_file,
-  $max_execution_time          = $drupal_php::params::max_execution_time,
+  $manage_repos                = $drupal_php::params::manage_repos,
+  $max_execution_time_cli      = $drupal_php::params::max_execution_time_cli,
+  $max_execution_time_server   = $drupal_php::params::max_execution_time_server,
   $memory_limit_server         = $drupal_php::params::memory_limit_server,
   $memory_limit_cli            = $drupal_php::params::memory_limit_cli,
   $opcache                     = $drupal_php::params::opcache,
@@ -34,15 +36,28 @@ class drupal_php (
   }
 
   class { '::php':
-    fpm => false,
+    manage_repos => $manage_repos,
     extensions => {
-      gd    => { },
-      imagick   => {},
+      bcmath => {},
+      bz2 => {},
+      dba => {},
+      gd => {},
+      imagick => {},
+      ldap => {},
+      mbstring => {},
+      mcrypt => {},
       memcached => {},
       mysql => {},
+      opcache => {},
       curl  => {},
-      uploadprogress => {},
-      redis => {},
+      uploadprogress => {
+        package_prefix => 'php-'
+      },
+      redis => {
+        package_prefix => 'php-'
+      },
+      soap => {},
+      zip => {}
     },
     settings => {
       'PHP/date.timezone' => $timezone,
@@ -51,11 +66,29 @@ class drupal_php (
       'PHP/log_errors' => $log_errors,
       'PHP/display_errors' => $display_errors,
       'PHP/error_log' => $error_log,
-      # TODO: Separate memory limit for the CLI
-      'PHP/memory_limit' => $memory_limit_server,
-      # TODO: Not for CLI
-      'PHP/max_execution_time' => $max_execution_time,
     }
+  }
+
+  # Add separate settings for cli and fpm.
+  ::php::config::setting { 'cli-PHP/memory_limit':
+    file  => $::php::cli::inifile,
+    key   => 'PHP/memory_limit',
+    value => $memory_limit_cli,
+  }
+  ::php::config::setting { 'cli-PHP/max_execution_time':
+    file  => $::php::cli::inifile,
+    key   => 'PHP/max_execution_time',
+    value => $max_execution_time_cli,
+  }
+  ::php::config::setting { 'fpm-PHP/memory_limit':
+    file  => $::php::fpm::inifile,
+    key   => 'PHP/memory_limit',
+    value => $memory_limit_server,
+  }
+  ::php::config::setting { 'fpm-PHP/max_execution_time':
+    file  => $::php::fpm::inifile,
+    key   => 'PHP/max_execution_time',
+    value => $max_execution_time_server,
   }
 
   if ($manage_log_file) {

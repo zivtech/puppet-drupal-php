@@ -114,4 +114,6 @@ class drupal_php::server::apache (
   }
 
   include apache::mod::php
+  include apache::mod::proxy
+  include apache::mod::proxy_fcgi
 }
