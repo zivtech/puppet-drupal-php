@@ -14,7 +14,6 @@ class drupal_php (
   $manage_fpm_pool             = $drupal_php::params::manage_fpm_pool,
   $manage_log_file             = $drupal_php::params::manage_log_file,
   $manage_repos                = $drupal_php::params::manage_repos,
-  $managed_fpm_pool_listen     = $drupal_php::params::managed_fpm_pool_listen,
   $max_execution_time_cli      = $drupal_php::params::max_execution_time_cli,
   $max_execution_time_server   = $drupal_php::params::max_execution_time_server,
   $memory_limit_server         = $drupal_php::params::memory_limit_server,
@@ -113,21 +112,7 @@ class drupal_php (
   }
 
   if ($manage_fpm_pool) {
-    ::php::fpm::pool {'drupal_php':
-      listen               => $managed_fpm_pool_listen,
-      catch_workers_output => 'yes',
-      php_flag             => {
-        'magic_quotes_gpc'              => 'off',
-        'magic_quotes_sybase'           => 'off',
-        'register_globals'              => 'off',
-        'session.auto_start'            => 'off',
-        'mbstring.encoding_translation' => 'off',
-      },
-      php_value            => {
-        'mbstring.http_input'  => 'pass',
-        'mbstring.http_output' => 'pass',
-      }
-    }
+    include drupal_php::fpm
   }
 
   # TODO: Fix this one
