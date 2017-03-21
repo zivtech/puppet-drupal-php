@@ -2,13 +2,13 @@
 
 The goal of this module is to create a simple and easy to use class for configuring
 php, specifically with Drupal in mind.  It wraps the most complete and popular
-[php module](https://forge.puppetlabs.com/nodes/php) on the forge and adds a ton of
-convenience settings that can be set from hierra.
+[php module](https://forge.puppetlabs.com/mayflower/php) on the forge and adds a ton of
+convenience settings that can be set from hiera.
 
-This module is thoroughly tested on Ubuntu 12.04, and 14.04 and should be useable
-right out of the box.  It currently supports running php in apache with mod_php and manages
+This module is thoroughly tested on Ubuntu 16.04 and should be useable
+right out of the box.  It currently supports running php in apache with php-fpm and manages
 apache as well using [puppetlabs-apache](https://forge.puppetlabs.com/puppetlabs/apache).
-The module has been architected with the intention of adding fpm and nginx support, we're
+The module has been architected with the intention of adding nginx support, we're
 just not there yet.  PR's are welcome.
 
 
@@ -30,10 +30,9 @@ include drupal_php
 
 ```` puppet
 class { 'drupal_php':
-  # Defaults to opcache.
-  opcache 			 => 'apc',
-  memory_limit 		 => '128M',
-  max_execution_time => 60,
+  memory_limit_server    => '128M',
+  max_execution_time_cli => 60,
+  post_max_size          => '8M',
 }
 ````
 
@@ -41,5 +40,6 @@ More advanced configuration can be accomplished using hierra.
 
 ### What drupal_php affects
 
-* Installs php, many extensions, and apache
+* Installs php, php-fpm, many extensions, and apache
 * Modifies some apache configurations (installing modules, optionally changing listen ports)
+* Installs a default fpm pool that listens at 127.0.0.0:9001
