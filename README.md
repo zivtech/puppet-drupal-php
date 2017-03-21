@@ -42,4 +42,4 @@ More advanced configuration can be accomplished using hierra.
 
 * Installs php, php-fpm, many extensions, and apache
 * Modifies some apache configurations (installing modules, optionally changing listen ports)
-* Installs a default fpm pool that listens at 127.0.0.0:9001
+* Installs a default fpm pool that listens at 127.0.0.1:9001
