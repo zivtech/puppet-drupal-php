@@ -9,7 +9,7 @@
   "issues_url": "https://github.com/zivtech/puppet-drupal-php/issues",
   "dependencies": [
     {"name":"puppetlabs-stdlib","version_requirement":">= 1.0.0"},
-    {"name":"puppetlabs-apache","version_requirement":">= 1.0.0"},
+    {"name":"puppetlabs-apache","version_requirement":">= 1.10.0"},
     {"name":"mayflower-php","version_requirement":">= 4.0.0"}
   ]
 }
