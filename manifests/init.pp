@@ -14,6 +14,7 @@ class drupal_php (
   $manage_fpm_pool             = $drupal_php::params::manage_fpm_pool,
   $manage_log_file             = $drupal_php::params::manage_log_file,
   $manage_repos                = $drupal_php::params::manage_repos,
+  $managed_fpm_pool_listen     = $drupal_php::params::managed_fpm_pool_listen,
   $max_execution_time_cli      = $drupal_php::params::max_execution_time_cli,
   $max_execution_time_server   = $drupal_php::params::max_execution_time_server,
   $memory_limit_server         = $drupal_php::params::memory_limit_server,
@@ -113,7 +114,7 @@ class drupal_php (
 
   if ($manage_fpm_pool) {
     ::php::fpm::pool {'drupal_php':
-      listen               => '127.0.0.1:9001',
+      listen               => $managed_fpm_pool_listen,
       catch_workers_output => 'yes',
       php_flag             => {
         'magic_quotes_gpc'              => 'off',

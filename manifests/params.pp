@@ -24,6 +24,7 @@ class drupal_php::params (
   $expose_php = 'On'
   $manage_fpm_pool = true
   $manage_log_file = true
+  $managed_fpm_pool_listen = '127.0.0.1:9001';
   $display_errors  = 'Off'
   $display_startup_errors  = 'Off'
   $log_errors = 'On'
