@@ -4,9 +4,11 @@ class drupal_php (
   $default_vhost_docroot_group = $drupal_php::params::default_vhost_docroot_group,
   $default_vhost_docroot_owner = $drupal_php::params::default_vhost_docroot_owner,
   $display_errors              = $drupal_php::params::display_errors,
+  $display_startup_errors      = $drupal_php::params::display_startup_errors,
   $error_log                   = $drupal_php::params::error_log,
   $error_log_directory         = $drupal_php::params::error_log_directory,
   $error_log_file              = $drupal_php::params::error_log_file,
+  $error_reporting             = $drupal_php::params::error_reporting,
   $expose_php                  = $drupal_php::params::expose_php,
   $log_errors                  = $drupal_php::params::log_errors,
   $manage_log_file             = $drupal_php::params::manage_log_file,
@@ -65,7 +67,9 @@ class drupal_php (
       'PHP/upload_max_filesize' => $upload_max_filesize,
       'PHP/log_errors' => $log_errors,
       'PHP/display_errors' => $display_errors,
+      'PHP/display_startup_errors' => $display_startup_errors,
       'PHP/error_log' => $error_log,
+      'PHP/error_reporting' => $error_reporting,
     }
   }
 

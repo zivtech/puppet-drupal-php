@@ -20,9 +20,11 @@ class drupal_php::params (
   $error_log_directory = '/var/log/php'
   $error_log_file = 'error.log'
   $error_log = "${error_log_directory}/${error_log_file}"
+  $error_reporting = 'E_ALL & ~E_DEPRECATED & ~E_STRICT'
   $expose_php = 'On'
   $manage_log_file = true
   $display_errors  = 'Off'
+  $display_startup_errors  = 'Off'
   $log_errors = 'On'
   $timezone = 'GMT'
   $server_manage_service = true
