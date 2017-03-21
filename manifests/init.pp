@@ -11,6 +11,7 @@ class drupal_php (
   $error_reporting             = $drupal_php::params::error_reporting,
   $expose_php                  = $drupal_php::params::expose_php,
   $log_errors                  = $drupal_php::params::log_errors,
+  $manage_fpm_pool             = $drupal_php::params::manage_fpm_pool,
   $manage_log_file             = $drupal_php::params::manage_log_file,
   $manage_repos                = $drupal_php::params::manage_repos,
   $max_execution_time_cli      = $drupal_php::params::max_execution_time_cli,
@@ -107,6 +108,24 @@ class drupal_php (
       ensure => 'file',
       owner  => $server_user,
       group  => $server_group,
+    }
+  }
+
+  if ($manage_fpm_pool) {
+    ::php::fpm::pool {'drupal_php':
+      listen               => '127.0.0.1:9001',
+      catch_workers_output => 'yes',
+      php_flag             => {
+        'magic_quotes_gpc'              => 'off',
+        'magic_quotes_sybase'           => 'off',
+        'register_globals'              => 'off',
+        'session.auto_start'            => 'off',
+        'mbstring.encoding_translation' => 'off',
+      },
+      php_value            => {
+        'mbstring.http_input'  => 'pass',
+        'mbstring.http_output' => 'pass',
+      }
     }
   }
 

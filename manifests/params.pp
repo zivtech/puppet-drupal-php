@@ -22,6 +22,7 @@ class drupal_php::params (
   $error_log = "${error_log_directory}/${error_log_file}"
   $error_reporting = 'E_ALL & ~E_DEPRECATED & ~E_STRICT'
   $expose_php = 'On'
+  $manage_fpm_pool = true
   $manage_log_file = true
   $display_errors  = 'Off'
   $display_startup_errors  = 'Off'
