@@ -93,14 +93,6 @@ class drupal_php::server::apache (
   }
 
   if ($manage_server_listen) {
-    # This appears by default, if the port is not 80 we should remove it.
-    if ($server_port != 80) {
-      concat::fragment { "Listen 80":
-        ensure  => 'absent',
-        target  => $::apache::ports_file,
-        content => template('apache/listen.erb'),
-      }
-    }
     apache::listen { "${server_port}": }
     apache::namevirtualhost { "*:${server_port}": }
     if ($ssl) {
