@@ -16,9 +16,6 @@ class drupal_php::fpm (
     pm_max_children      => $pm_max_children,
     pm_max_requests      => $pm_max_requests,
     php_flag             => {
-      'magic_quotes_gpc'              => 'off',
-      'magic_quotes_sybase'           => 'off',
-      'register_globals'              => 'off',
       'session.auto_start'            => 'off',
       'mbstring.encoding_translation' => 'off',
     },
