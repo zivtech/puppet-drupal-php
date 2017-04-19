@@ -38,6 +38,7 @@ class drupal_php (
     server_service_ensure => $server_service_ensure,
   }
 
+  # @todo: Add uploadprogress once we figure out how to get it working.
   class { '::php':
     manage_repos => $manage_repos,
     extensions => {
@@ -50,12 +51,13 @@ class drupal_php (
       mbstring => {},
       mcrypt => {},
       memcached => {},
-      mysql => {},
-      opcache => {},
-      curl  => {},
-      uploadprogress => {
-        package_prefix => 'php-'
+      mysql => {
+        so_name => 'pdo_mysql',
       },
+      opcache => {
+        zend => true,
+      },
+      curl  => {},
       redis => {
         package_prefix => 'php-'
       },
