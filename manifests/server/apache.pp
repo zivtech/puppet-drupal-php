@@ -20,7 +20,7 @@ class drupal_php::server::apache (
     mpm_module     => $mpm_module,
     default_vhost  => false,
     service_manage => $server_manage_service,
-    service_enable => $service_enable,
+    service_enable => $server_service_enable,
     service_ensure => $server_service_ensure,
     purge_configs  => $purge_configs,
   }
