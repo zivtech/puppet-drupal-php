@@ -78,24 +78,28 @@ class drupal_php (
 
   # Add separate settings for cli and fpm.
   ::php::config::setting { 'cli-PHP/memory_limit':
-    file  => $::php::cli::inifile,
-    key   => 'PHP/memory_limit',
-    value => $memory_limit_cli,
+    file    => $::php::cli::inifile,
+    key     => 'PHP/memory_limit',
+    value   => $memory_limit_cli,
+    require => Class['php'],
   }
   ::php::config::setting { 'cli-PHP/max_execution_time':
-    file  => $::php::cli::inifile,
-    key   => 'PHP/max_execution_time',
-    value => $max_execution_time_cli,
+    file    => $::php::cli::inifile,
+    key     => 'PHP/max_execution_time',
+    value   => $max_execution_time_cli,
+    require => Class['php'],
   }
   ::php::config::setting { 'fpm-PHP/memory_limit':
-    file  => $::php::fpm::inifile,
-    key   => 'PHP/memory_limit',
-    value => $memory_limit_server,
+    file    => $::php::fpm::inifile,
+    key     => 'PHP/memory_limit',
+    value   => $memory_limit_server,
+    require => Class['php'],
   }
   ::php::config::setting { 'fpm-PHP/max_execution_time':
-    file  => $::php::fpm::inifile,
-    key   => 'PHP/max_execution_time',
-    value => $max_execution_time_server,
+    file    => $::php::fpm::inifile,
+    key     => 'PHP/max_execution_time',
+    value   => $max_execution_time_server,
+    require => Class['php'],
   }
 
   if ($manage_log_file) {
