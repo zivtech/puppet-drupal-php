@@ -22,7 +22,7 @@ class drupal_php::params (
   $error_log = "${error_log_directory}/${error_log_file}"
   $error_reporting = 'E_ALL & ~E_DEPRECATED & ~E_STRICT'
   $expose_php = 'On'
-  $fpm_pool_listen = '127.0.0.1:9000'
+  $fpm_pool_listen = '127.0.0.1:9001'
   $fpm_pm_start_servers = '5'
   $fpm_pm_min_spare_servers = '5'
   $fpm_pm_max_spare_servers = '35'
