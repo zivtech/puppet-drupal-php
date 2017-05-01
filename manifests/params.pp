@@ -12,22 +12,33 @@ class drupal_php::params (
 
   $memory_limit_server = '128M'
   $memory_limit_cli = '-1'
-  $max_execution_time = 30
+  $manage_repos = true
+  $max_execution_time_server = 30
+  $max_execution_time_cli = 0
   $post_max_size = '8M'
   $upload_max_filesize = '200M'
   $error_log_directory = '/var/log/php'
   $error_log_file = 'error.log'
   $error_log = "${error_log_directory}/${error_log_file}"
+  $error_reporting = 'E_ALL & ~E_DEPRECATED & ~E_STRICT'
   $expose_php = 'On'
+  $fpm_pool_listen = '127.0.0.1:9001'
+  $fpm_pm_start_servers = '5'
+  $fpm_pm_min_spare_servers = '5'
+  $fpm_pm_max_spare_servers = '35'
+  $fpm_pm_max_children = '50'
+  $fpm_pm_max_requests = '0'
+  $manage_fpm_pool = true
   $manage_log_file = true
   $display_errors  = 'Off'
+  $display_startup_errors  = 'Off'
   $log_errors = 'On'
   $timezone = 'GMT'
   $server_manage_service = true
   $server_service_enable = true
   $server_service_ensure = 'running'
 
-  if $::php_version == '' or versioncmp($::php_version, '5.4') >= 0 {
+  if $::phpversion == undef or versioncmp($::phpversion, '5.4') >= 0 {
     $opcache = 'opcache'
   }
   else {

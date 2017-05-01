@@ -20,13 +20,12 @@ class drupal_php::server::apache (
     mpm_module     => $mpm_module,
     default_vhost  => false,
     service_manage => $server_manage_service,
-    service_enable => $service_enable,
+    service_enable => $server_service_enable,
     service_ensure => $server_service_ensure,
     purge_configs  => $purge_configs,
   }
 
   # TODO Audit this list. Drupal actually doesn't need most of these.
-  class { '::apache::mod::actions': }
   class { '::apache::mod::auth_basic': }
   class { '::apache::mod::authn_file': }
   class { '::apache::mod::authz_user': }
@@ -50,7 +49,8 @@ class drupal_php::server::apache (
 
   if ($server_manage_service) {
     # The puppet service resource name is always httpd in puppet with puppetlabs-apache.
-    Php::Extension <| |> -> Php::Config <| |> ~> Service['httpd']
+    Php::Extension <| |> ~> Service['httpd']
+    Php::Config <| |> ~> Service['httpd']
   }
 
   $vhost_ensure = $server_default_vhost ? {
@@ -93,14 +93,6 @@ class drupal_php::server::apache (
   }
 
   if ($manage_server_listen) {
-    # This appears by default, if the port is not 80 we should remove it.
-    if ($server_port != 80) {
-      concat::fragment { "Listen 80":
-        ensure  => 'absent',
-        target  => $::apache::ports_file,
-        content => template('apache/listen.erb'),
-      }
-    }
     apache::listen { "${server_port}": }
     apache::namevirtualhost { "*:${server_port}": }
     if ($ssl) {
@@ -114,4 +106,6 @@ class drupal_php::server::apache (
   }
 
   include apache::mod::php
+  include apache::mod::proxy
+  include apache::mod::proxy_fcgi
 }

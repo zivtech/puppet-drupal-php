@@ -4,13 +4,18 @@ class drupal_php (
   $default_vhost_docroot_group = $drupal_php::params::default_vhost_docroot_group,
   $default_vhost_docroot_owner = $drupal_php::params::default_vhost_docroot_owner,
   $display_errors              = $drupal_php::params::display_errors,
+  $display_startup_errors      = $drupal_php::params::display_startup_errors,
   $error_log                   = $drupal_php::params::error_log,
   $error_log_directory         = $drupal_php::params::error_log_directory,
   $error_log_file              = $drupal_php::params::error_log_file,
+  $error_reporting             = $drupal_php::params::error_reporting,
   $expose_php                  = $drupal_php::params::expose_php,
   $log_errors                  = $drupal_php::params::log_errors,
+  $manage_fpm_pool             = $drupal_php::params::manage_fpm_pool,
   $manage_log_file             = $drupal_php::params::manage_log_file,
-  $max_execution_time          = $drupal_php::params::max_execution_time,
+  $manage_repos                = $drupal_php::params::manage_repos,
+  $max_execution_time_cli      = $drupal_php::params::max_execution_time_cli,
+  $max_execution_time_server   = $drupal_php::params::max_execution_time_server,
   $memory_limit_server         = $drupal_php::params::memory_limit_server,
   $memory_limit_cli            = $drupal_php::params::memory_limit_cli,
   $opcache                     = $drupal_php::params::opcache,
@@ -33,150 +38,68 @@ class drupal_php (
     server_service_ensure => $server_service_ensure,
   }
 
-  require wget
-
-  include php
-
-  include php::dev
-
-  include php::cli
-
-  include php::composer
-
-  include php::pear
-
-  include php::extension::curl
-
-  include php::extension::ldap
-
-  # TODO: do we want memcache or memcached
-  include php::extension::memcached
-
-  include php::extension::mysql
-
-  include php::apache
-
-  include php::cli
-  # PECL install method is no longer available. Requires PHP 7.0.0
-  if $::php_version == '' or versioncmp($::php_version, '5.5') >= 0 {
-    class { 'php::extension::redis':
-      package  => 'php5-redis',
-    }->
-
-    php::config { 'redis_conf':
-      file  => "${php::params::config_root_ini}/redis.ini",
-      config => [
-        'set ".anon/extension" "redis.so"'
-      ],
+  # @todo: Add uploadprogress once we figure out how to get it working.
+  class { '::php':
+    manage_repos => $manage_repos,
+    extensions => {
+      bcmath => {},
+      bz2 => {},
+      dba => {},
+      gd => {},
+      imagick => {},
+      ldap => {},
+      mbstring => {},
+      mcrypt => {},
+      memcached => {},
+      mysql => {
+        so_name => 'pdo_mysql',
+      },
+      opcache => {
+        zend => true,
+      },
+      curl  => {},
+      redis => {
+        package_prefix => 'php-'
+      },
+      soap => {},
+      zip => {}
+    },
+    settings => {
+      'PHP/date.timezone' => $timezone,
+      'PHP/post_max_size' => $post_max_size,
+      'PHP/upload_max_filesize' => $upload_max_filesize,
+      'PHP/log_errors' => $log_errors,
+      'PHP/display_errors' => $display_errors,
+      'PHP/display_startup_errors' => $display_startup_errors,
+      'PHP/error_log' => $error_log,
+      'PHP/error_reporting' => $error_reporting,
     }
   }
 
-  # Modifying the config file is failing.
-  class { 'php::extension::uploadprogress':
-    package => 'uploadprogress',
+  # Add separate settings for cli and fpm.
+  ::php::config::setting { 'cli-PHP/memory_limit':
+    file    => $::php::cli::inifile,
+    key     => 'PHP/memory_limit',
+    value   => $memory_limit_cli,
+    require => Class['php'],
   }
-
-  include php::extension::gd
-
-  # Doesn't exist with this version:
-  include php::extension::imagick
-
-  case $opcache {
-    'none': {
-    }
-    'apc': {
-      include drupal_php::extension::apc
-    }
-    'opcache': {
-      include drupal_php::extension::opcache
-    }
-    default: {
-       warning("drupal_php does not support the sepcified opcache: `${opcache}")
-    }
+  ::php::config::setting { 'cli-PHP/max_execution_time':
+    file    => $::php::cli::inifile,
+    key     => 'PHP/max_execution_time',
+    value   => $max_execution_time_cli,
+    require => Class['php'],
   }
-
-  php::config { 'php-date-timezone':
-    file  => "${php::params::config_root_ini}/general_settings.ini",
-    section  => 'PHP',
-    setting  => 'date.timezone',
-    value    => $timezone,
+  ::php::config::setting { 'fpm-PHP/memory_limit':
+    file    => $::php::fpm::inifile,
+    key     => 'PHP/memory_limit',
+    value   => $memory_limit_server,
+    require => Class['php'],
   }
-
-  php::config { 'php-post-max-size':
-    file  => "${php::params::config_root_ini}/general_settings.ini",
-    section  => 'PHP',
-    setting  => 'post_max_size',
-    value    => $post_max_size,
-  }
-
-  php::config { 'php-upload-max-filesize':
-    file  => "${php::params::config_root_ini}/general_settings.ini",
-    section  => 'PHP',
-    setting  => 'upload_max_filesize',
-    value    => $upload_max_filesize,
-  }
-
-  php::config { 'php-log-errors':
-    file  => "${php::params::config_root_ini}/general_settings.ini",
-    section  => 'PHP',
-    setting  => 'log_errors',
-    value    => $log_errors,
-  }
-
-  php::config { 'php-display-errors':
-    file  => "${php::params::config_root_ini}/general_settings.ini",
-    section  => 'PHP',
-    setting  => 'display_errors',
-    value    => $display_errors,
-  }
-
-  php::config { 'php-error-log':
-    file  => "${php::params::config_root_ini}/general_settings.ini",
-    section  => 'PHP',
-    setting  => 'error_log',
-    value    => $error_log,
-  }
-
-  php::apache::config { 'php-memory-limit-server':
-    section  => 'PHP',
-    setting  => 'memory_limit',
-    value    => $memory_limit_server,
-  }
-
-  php::cli::config { 'php-memory-limit-cli':
-    section  => 'PHP',
-    setting  => 'memory_limit',
-    value    => $memory_limit_cli,
-  }
-
-  # We previously had the memory limit in general settings,
-  # so we remove it for users when they update.
-  php::config { 'php-memory-limit':
-    ensure => 'absent',
-    file  => "${php::params::config_root_ini}/general_settings.ini",
-    section  => 'PHP',
-    setting  => 'memory_limit',
-  }
-
-  php::apache::config { 'php-max-execution-time-server':
-    section  => 'PHP',
-    setting  => 'max_execution_time',
-    value    => $max_execution_time,
-  }
-
-  php::apache::config { 'php-expose-php':
-    section  => 'PHP',
-    setting  => 'expose_php',
-    value    => $expose_php,
-  }
-
-  # We previously had the max execution time in general settings,
-  # so we remove it for users when they update.
-  php::config { 'php-max-execution-time':
-    ensure => 'absent',
-    file  => "${php::params::config_root_ini}/general_settings.ini",
-    section  => 'PHP',
-    setting  => 'max_execution_time',
+  ::php::config::setting { 'fpm-PHP/max_execution_time':
+    file    => $::php::fpm::inifile,
+    key     => 'PHP/max_execution_time',
+    value   => $max_execution_time_server,
+    require => Class['php'],
   }
 
   if ($manage_log_file) {
@@ -194,32 +117,19 @@ class drupal_php (
     }
   }
 
-
-  if $::php_version == '' or versioncmp($::php_version, '5.4') >= 0 {
-    file { '/etc/php5/apache2/conf.d/20-general_settings.ini':
-      target  => "${php::params::config_root_ini}/general_settings.ini",
-      mode    => '0644',
-      owner   => 'root',
-      group   => 'root',
-      notify  => Service['httpd'],
-      require => Php::Config['php-upload-max-filesize'],
-    }
-
-    file { '/etc/php5/cli/conf.d/20-general_settings.ini':
-      target  => "${php::params::config_root_ini}/general_settings.ini",
-      mode    => '0644',
-      owner   => 'root',
-      group   => 'root',
-      notify  => Service['httpd'],
-      require => Php::Config['php-upload-max-filesize'],
-    }
+  if ($manage_fpm_pool) {
+    include drupal_php::fpm
   }
 
-  # Unfotunately, old ubuntu packages use deprecated comments.
-  exec { 'clean deprecated comments in /etc/php5/conf.d':
-    command => "find ${php::params::config_root_ini}/* -type f -exec sed -i 's/#/;/g' {} \\;",
-    path => "/usr/bin:/usr/sbin:/bin",
-    onlyif => "grep -qr '#' /etc/php5/conf.d"
+  # TODO: Fix this one
+  /*
+  php::apache::config { 'php-expose-php':
+    section  => 'PHP',
+    setting  => 'expose_php',
+    value    => $expose_php,
   }
+  */
+
+
 
 }
