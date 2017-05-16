@@ -1,3 +1,7 @@
+### v5.0.0
+ - removes apache mod\_php from the default installation in hopes that
+php-fpm will be used instead.
+
 ### v3.2.1
  - Changes conditional to use PHP version rather than Ubuntu version
  to allow for other Linux distros.
