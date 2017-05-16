@@ -105,7 +105,6 @@ class drupal_php::server::apache (
     apache::namevirtualhost { '*': }
   }
 
-  include apache::mod::php
   include apache::mod::proxy
   include apache::mod::proxy_fcgi
 }
