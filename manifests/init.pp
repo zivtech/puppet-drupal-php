@@ -46,11 +46,15 @@ class drupal_php (
       bz2 => {},
       dba => {},
       gd => {},
-      imagick => {},
+      imagick => {
+        package_prefix => 'php-'
+      },
       ldap => {},
       mbstring => {},
       mcrypt => {},
-      memcached => {},
+      memcached => {
+        package_prefix => 'php-'
+      },
       mysql => {
         so_name => 'pdo_mysql',
       },
