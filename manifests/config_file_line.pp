@@ -8,18 +8,20 @@ define drupal_php::config_file_line(
   # it should be removed from the config file.
   if ($value == undef) {
     $ensure = 'absent'
-    $match  = "^${option}*"
   }
   else {
     $ensure = 'present'
-    $match = "^${option}"
   }
 
   file_line { "${name}":
     ensure            => $ensure,
     path              => $path,
     line              => "${option} ${value}",
-    match             => $match,
+    # Match the option if it is indented
+    # but not if it's commented out.
+    # This is so we don't replace multiple
+    # lines with the same setting.
+    match             => "^[^#]*${option}*",
     match_for_absence => true,
   }
 }
