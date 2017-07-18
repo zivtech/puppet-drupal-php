@@ -92,6 +92,71 @@ class drupal_php::server::apache (
     }
   }
 
+  # The apache module does not allow us to overwrite the
+  # mpm_event.conf file.  It only allows writing the event.conf
+  # file but mpm_event.conf is the one used by apache.
+  if ($mpm_module == 'event') {
+    $event_conf_file = "${::apache::mod_dir}/mpm_event.conf"
+    $event_config = {
+      'mpm_event_maxclients' => {
+        'value'  => $apache::mod::event::maxclients,
+        'option' => "MaxClients",
+        'path'   => $event_conf_file,
+      },
+      'mpm_event_maxrequestworkers' => {
+        'value'  => $apache::mod::event::maxrequestworkers,
+        'option' => "MaxRequestWorkers",
+        'path'   => $event_conf_file,
+      },
+      'mpm_event_maxrequestsperchild' => {
+        'value'  => $apache::mod::event::maxrequestsperchild,
+        'option' => "MaxConnectionsPerChild",
+        'path'   => $event_conf_file,
+      },
+      'mpm_event_maxconnectionsperchild' => {
+        'value'  => $apache::mod::event::maxconnectionsperchild,
+        'option' => "MaxConnectionsPerChild",
+        'path'   => $event_conf_file,
+      },
+      'mpm_event_minsparethreads' => {
+        'value'  => $apache::mod::event::minsparethreads,
+        'option' => "MinSpareThreads",
+        'path'   => $event_conf_file,
+      },
+      'mpm_event_maxsparethreads' => {
+        'value'  => $apache::mod::event::maxsparethreads,
+        'option' => "MaxSpareThreads",
+        'path'   => $event_conf_file,
+      },
+      'mpm_event_threadlimit' => {
+        'value'  => $apache::mod::event::threadlimit,
+        'option' => "ThreadLimit",
+        'path'   => $event_conf_file,
+      },
+      'mpm_event_threadsperchild' => {
+        'value'  => $apache::mod::event::threadsperchild,
+        'option' => "ThreadsPerChild",
+        'path'   => $event_conf_file,
+      },
+      'mpm_event_startservers' => {
+        'value'  => $apache::mod::event::startservers,
+        'option' => "StartServers",
+        'path'   => $event_conf_file,
+      },
+      'mpm_event_serverlimit' => {
+        'value'  => $apache::mod::event::serverlimit,
+        'option' => "ServerLimit",
+        'path'   => $event_conf_file,
+      },
+      'mpm_event_listenbacklog' => {
+        'value'  => $apache::mod::event::listenbacklog,
+        'option' => "ListenBacklog",
+        'path'   => $event_conf_file,
+      },
+    }
+    create_resources('drupal_php::config_file_line', $event_config)
+  }
+
   if ($manage_server_listen) {
     apache::listen { "${server_port}": }
     apache::namevirtualhost { "*:${server_port}": }
