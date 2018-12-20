@@ -51,7 +51,6 @@ class drupal_php (
       },
       ldap => {},
       mbstring => {},
-      mcrypt => {},
       memcached => {
         package_prefix => 'php-'
       },
