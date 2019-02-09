@@ -64,11 +64,13 @@ class drupal_php::params (
         'RedHat', 'CentOS', 'Fedora', 'Scientific', 'Amazon', 'OracleLinux', 'SLC': {
           $apache_service_name = 'httpd'
           $server_user = 'apache'
+          $server_group = 'apache'
           $default_vhost_docroot = '/var/www/html/default'
         }
         'Debian', 'Ubuntu': {
           $apache_service_name = 'apache2'
           $server_user = 'www-data'
+          $server_group = 'www-data'
           $default_vhost_docroot = '/var/www/default'
         }
         default: {
