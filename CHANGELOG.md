@@ -1,3 +1,6 @@
+### v6.0.0
+ - Updates manifest for puppet-php 7.1.0.
+
 ### v5.0.0
  - removes apache mod\_php from the default installation in hopes that
 php-fpm will be used instead.
