@@ -85,21 +85,6 @@ class drupal_php (
     }
   }
 
-  class { '::php::fpm':
-    settings => {
-      'PHP/date.timezone' => $timezone,
-      'PHP/post_max_size' => $post_max_size,
-      'PHP/upload_max_filesize' => $upload_max_filesize,
-      'PHP/log_errors' => $log_errors,
-      'PHP/display_errors' => $display_errors,
-      'PHP/display_startup_errors' => $display_startup_errors,
-      'PHP/error_log' => $error_log,
-      'PHP/error_reporting' => $error_reporting,
-      'PHP/memory_limit' => $memory_limit_cli,
-      'PHP/max_execution_time' => $max_execution_time_cli,
-    }
-  }
-
   if ($manage_log_file) {
     file { 'php-error-log-directory':
       path   => $error_log_directory,
