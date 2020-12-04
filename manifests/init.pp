@@ -76,6 +76,12 @@ class drupal_php (
       'PHP/display_startup_errors' => $display_startup_errors,
       'PHP/error_log' => $error_log,
       'PHP/error_reporting' => $error_reporting,
+      'PHP/memory_limit' => $memory_limit_server,
+      'PHP/max_execution_time' => $max_execution_time_server,
+    },
+    cli_settings => {
+      'PHP/memory_limit' => $memory_limit_cli,
+      'PHP/max_execution_time' => $max_execution_time_cli,
     }
   }
 
