@@ -13,6 +13,11 @@ class drupal_php::params (
   $memory_limit_server = '128M'
   $memory_limit_cli = '-1'
   $manage_repos = true
+  $fpm          = true
+  $dev          = true
+  $composer     = true
+  $pear         = true
+  $phpunit      = false
   $max_execution_time_server = 30
   $max_execution_time_cli = 0
   $post_max_size = '8M'
