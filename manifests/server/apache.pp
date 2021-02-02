@@ -38,7 +38,6 @@ class drupal_php::server::apache (
   class { '::apache::mod::reqtimeout': }
   class { '::apache::mod::rewrite': }
   class { '::apache::mod::setenvif': }
-  class { '::apache::mod::status': }
   class { '::apache::mod::suexec': }
   class { '::apache::mod::xsendfile': }
 
