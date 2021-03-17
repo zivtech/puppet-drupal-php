@@ -46,14 +46,10 @@ class drupal_php (
       bz2 => {},
       dba => {},
       gd => {},
-      imagick => {
-        package_prefix => 'php-'
-      },
+      imagick => {},
       ldap => {},
       mbstring => {},
-      memcached => {
-        package_prefix => 'php-'
-      },
+      memcached => {},
       mysql => {
         so_name => 'pdo_mysql',
       },
@@ -61,9 +57,7 @@ class drupal_php (
         zend => true,
       },
       curl  => {},
-      redis => {
-        package_prefix => 'php-'
-      },
+      redis => {},
       soap => {},
       zip => {}
     },
